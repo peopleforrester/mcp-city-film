@@ -1,11 +1,11 @@
 // ABOUTME: Scene 7: USB-C closes around USB-A, and the six reasons to wrap tick in.
-// ABOUTME: The one test closes the scene.
+// ABOUTME: Apparently everybody is doing it.
 
 import React from "react";
 import { Img, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { CYAN, Caption, Screen } from "../ui";
 
-const REASONS = ["No authorization, so the wrapper decides per tool", "A credential the client must never hold", "A hundred tools; the model should see nine", "stdio on one side, HTTP on the other", "Every call logged, rate limited, traced", "Reads and writes split: two wrappers, two approvals"];
+const REASONS = ["The server does not meet our security standards", "Credentials must not cross from client to server", "A hundred tools offered; nine presented", "Reads and writes split into separate servers", "stdio on one side, HTTP on the other", "Every call logged, rate limited and traced"];
 
 export const Wrapped: React.FC = () => {
   const frame = useCurrentFrame();
@@ -29,7 +29,7 @@ export const Wrapped: React.FC = () => {
           );
         })}
       </div>
-      <Caption from={Math.round(durationInFrames * 0.78)} size={42}>The one test: is the credential that reaches the upstream different from the one the client sent?</Caption>
+      <Caption from={Math.round(durationInFrames * 0.78)} size={42}>Apparently everybody is doing it. The full list, and the tools, are on the site.</Caption>
     </Screen>
   );
 };

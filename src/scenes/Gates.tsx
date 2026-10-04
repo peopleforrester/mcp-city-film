@@ -5,7 +5,7 @@ import React from "react";
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { CYAN, Caption, Screen, ZONE } from "../ui";
 
-const ASK = ["Do we know the vendor?", "Do we need it, and is it core?", "How well is it built, and does it need wrapping?", "Does it speak the current spec?", "Does it carry authorization?", "Is the vendor itself compliant?"];
+const ASK = ["Do we have a relationship with the vendor? A contract, a support path.", "Is there a real business need?", "Is it well built, and wrapped where we needed?", "Does it speak the current spec?", "Does it meet our security standards?", "Is the vendor certified? SOC 2, ISO 27001."];
 
 export const Gates: React.FC = () => {
   const frame = useCurrentFrame();

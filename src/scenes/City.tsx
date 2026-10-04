@@ -30,7 +30,8 @@ const COLOR: Record<string, string> = { tool: "#ed561b", model: "#bc37de", contr
 export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-  const alley = sayNo ? spring({ frame: frame - Math.round(durationInFrames * 0.35), fps, config: { damping: 14 } }) : 0;
+  // When you say no the alleys light up; in the architecture scene they are only hinted at, late, as the deck's two red dashed lines.
+  const alley = sayNo ? spring({ frame: frame - Math.round(durationInFrames * 0.35), fps, config: { damping: 14 } }) : 0.35 * spring({ frame: frame - Math.round(durationInFrames * 0.72), fps, config: { damping: 14 } });
   return (
     <Screen horizon={0.95}>
       <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
@@ -73,12 +74,13 @@ export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
       {sayNo ? (
         <>
           <Caption from={0} top size={56}>So we said no.</Caption>
-          <Caption from={Math.round(durationInFrames * 0.4)} size={42}>PowerShell against Outlook. The approved browser, in debug mode, walking Teams. Nothing on the alleys is logged.</Caption>
+          <Caption from={Math.round(durationInFrames * 0.4)} size={42}>PowerShell against classic Outlook. The approved browser in debug mode, walking Teams. The shell and the browser never touch the gate.</Caption>
         </>
       ) : (
         <>
           <Caption from={0} top size={56}>The architecture, done properly.</Caption>
-          <Caption from={Math.round(durationInFrames * 0.1)} size={42}>A person. An agent. One gate every call goes through. The tools.</Caption>
+          <Caption from={Math.round(durationInFrames * 0.1)} end={Math.round(durationInFrames * 0.72)} size={42}>A person. A device. An agent. One gate, a proxy and a registry, that every call goes through. The tools.</Caption>
+          <Caption from={Math.round(durationInFrames * 0.74)} size={42}>The two red dashed lines: the shell and the browser never touch any of it. Hold that thought.</Caption>
         </>
       )}
     </Screen>

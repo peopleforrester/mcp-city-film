@@ -10,7 +10,7 @@ const STEPS = [
   ["2-ask", "An operator asks the agent to read the logs."],
   ["3-run", "The agent runs kubectl against the attacker's server, TLS verification off."],
   ["4-token", "kubectl sends the operator's bearer token."],
-  ["5-replay", "The attacker replays the token. Every call was authorized."],
+  ["5-replay", "The attacker now holds a token for a cluster they could not reach."],
 ];
 
 export const Attack: React.FC = () => {

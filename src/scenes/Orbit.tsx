@@ -40,7 +40,7 @@ export const Orbit: React.FC = () => {
         })}
       </div>
       <Caption from={10} size={72}>Governing MCP for a workforce the size of a city.</Caption>
-      <Caption from={Math.round(durationInFrames * 0.1)} top size={34}>So what do we mean by a city? Let me put it in ships.</Caption>
+      <Caption from={Math.round(durationInFrames * 0.1)} top size={34}>How many people are using MCP in this workforce? Let me put it in ships.</Caption>
     </Screen>
   );
 };

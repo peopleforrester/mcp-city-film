@@ -27,6 +27,7 @@ export const TheNo: React.FC = () => {
           );
         })}
       </div>
+      <Caption from={Math.round(durationInFrames * 0.42)} end={Math.round(durationInFrames * 0.62)} size={46}>Human tools for human communication. Accountability. Auditability. Attribution.</Caption>
       <Caption from={Math.round(durationInFrames * 0.65)} size={46}>"I don't see an MCP server for Outlook. Is there some other way we might do this?"</Caption>
     </Screen>
   );
