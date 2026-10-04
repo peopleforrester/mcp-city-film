@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "My Remotion video",
   "repository": {},
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "private": true,
   "dependencies": {
     "@remotion/cli": "4.0.532",
+    "@remotion/transitions": "^4.0.532",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "remotion": "4.0.532"
@@ -23,6 +24,7 @@
     "dev": "remotion studio",
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
-    "lint": "eslint src && tsc"
+    "lint": "eslint src && tsc",
+    "render": "remotion render src/index.ts Film out/film.mp4"
   }
 }

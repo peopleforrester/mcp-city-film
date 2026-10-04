@@ -1,54 +1,24 @@
-# Remotion video
+# The shadow-play film
 
-<p align="center">
-  <a href="https://github.com/remotion-dev/logo">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-dark.apng">
-      <img alt="Animated Remotion Logo" src="https://github.com/remotion-dev/logo/raw/main/animated-logo-banner-light.gif">
-    </picture>
-  </a>
-</p>
+A cartoon walkthrough of **Governing MCP for a Workforce the Size of a City**,
+the keynote at MCP Dev Summit Toronto on 6 October 2026, as a shadow play:
+cut-paper silhouettes on a backlit screen, the deck's own art, the site's
+ideas, and the talk's words as captions. Built with Remotion.
 
-Welcome to your Remotion project!
+- The talk's site: https://mcp.michaelrishiforrester.com
+- The collateral: https://github.com/peopleforrester/mcp-for-a-city
+- The site's source: https://github.com/peopleforrester/mcp-city
 
-## Commands
+## Run it
 
-**Install Dependencies**
-
-```console
-npm i --loglevel=error
+```bash
+npm install
+npm run dev                                        # Remotion Studio
+npx remotion render src/index.ts Film out/film.mp4  # the whole film
+npx remotion still src/index.ts scene-gates out/gates.jpg --frame=200
 ```
-
-**Start Preview**
-
-```console
-npm run dev
-```
-
-**Render video**
-
-```console
-npx remotion render
-```
-
-**Upgrade Remotion**
-
-```console
-npx remotion upgrade
-```
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help on our [Discord server](https://discord.gg/6VzzNDwUwV).
-
-## Issues
-
-Found an issue with Remotion? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
 
 ## License
 
-Note that for some entities a company license is needed. [Read the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+Code: Apache 2.0. The art is generated for the talk; the ship outlines depict
+designs that belong to their studios and are fan art for a scale comparison.
