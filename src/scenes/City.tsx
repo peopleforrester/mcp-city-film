@@ -16,7 +16,7 @@ const N: Record<string, [number, number, string]> = {
   P: [640, 350, "Proxy"], G: [830, 350, "Gateway"], API: [1040, 350, "Boundary"], SRV: [1240, 350, "MCP server"], T: [1460, 350, "Tool / data"],
   AG: [700, 640, "AI gateway"], LLM: [940, 640, "Models"],
   R: [1200, 660, "Registry"], IDP: [1420, 660, "Identity"], GIT: [1310, 740, "GitOps"],
-  OBS: [1700, 900, "Audit and traces"], OUT: [140, 900, "Outlook"], TM: [400, 900, "Teams"],
+  OBS: [1700, 900, "Audit and traces"], OUT: [140, 830, "Outlook"], TM: [400, 830, "Teams"],
 };
 const E: [string, string, string][] = [
   ["U", "A", "tool"], ["A", "P", "tool"], ["P", "G", "tool"], ["G", "API", "tool"], ["API", "SRV", "tool"], ["SRV", "T", "tool"],
