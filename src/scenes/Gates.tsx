@@ -6,11 +6,12 @@ import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
 import { CYAN, Caption, Screen, ZONE } from "../ui";
 
 const ASK = ["Do we know the vendor?", "Do we need it, and is it core?", "How well is it built, and does it need wrapping?", "Does it speak the current spec?", "Does it carry authorization?", "Is the vendor itself compliant?"];
-const STEP = 46;
 
 export const Gates: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { fps, durationInFrames } = useVideoConfig();
+  // The six gates share the scene evenly, with a breath left at the end for the admission line.
+  const STEP = Math.floor((durationInFrames - 60) / 6);
   const gate = Math.min(5, Math.floor(frame / STEP));
   const carX = interpolate(frame, [0, STEP * 6], [120, 1680], { extrapolateRight: "clamp" });
   return (

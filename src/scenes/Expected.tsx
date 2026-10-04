@@ -24,7 +24,7 @@ export const Expected: React.FC = () => {
           );
         })}
       </div>
-      <Caption from={80} size={44}>Other people here have covered all of these. I can answer every one. Quickly, then.</Caption>
+      <Caption from={Math.round(durationInFrames * 0.45)} size={44}>Other people here have covered all of these. I can answer every one. Quickly, then.</Caption>
     </Screen>
   );
 };

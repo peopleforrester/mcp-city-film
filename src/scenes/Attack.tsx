@@ -2,7 +2,7 @@
 // ABOUTME: CVE-2026-47250, as the public record tells it.
 
 import React from "react";
-import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { Caption, PINK, Screen } from "../ui";
 
 const STEPS = [
@@ -12,10 +12,11 @@ const STEPS = [
   ["4-token", "kubectl sends the operator's bearer token."],
   ["5-replay", "The attacker replays the token. Every call was authorized."],
 ];
-const STEP = 66;
 
 export const Attack: React.FC = () => {
   const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const STEP = Math.floor(durationInFrames / STEPS.length);
   const i = Math.min(STEPS.length - 1, Math.floor(frame / STEP));
   const local = frame - i * STEP;
   const fade = interpolate(local, [0, 12], [0, 1], { extrapolateRight: "clamp" });

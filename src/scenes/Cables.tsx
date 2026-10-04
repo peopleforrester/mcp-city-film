@@ -9,14 +9,14 @@ const PLUGS = [["parallel", "Parallel", 1981], ["serial", "Serial", 1984], ["ps2
 
 export const Cables: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const count = spring({ frame: frame - 130, fps, config: { damping: 30 } });
+  const { fps, durationInFrames } = useVideoConfig();
+  const count = spring({ frame: frame - Math.round(durationInFrames * 0.62), fps, config: { damping: 30 } });
   return (
     <Screen horizon={0.8}>
       <Caption from={0} top size={56}>"MCP is the USB of AI tooling." Remember these?</Caption>
       <div style={{ position: "absolute", top: 260, left: 80, display: "flex", gap: 22 }}>
         {PLUGS.map(([file, name, year], i) => {
-          const s = spring({ frame: frame - 14 - i * 10, fps, config: { damping: 11 } });
+          const s = spring({ frame: frame - Math.round(durationInFrames * 0.18) - i * Math.round(durationInFrames * 0.045), fps, config: { damping: 11 } });
           return (
             <div key={file} style={{ width: 232, background: "#fff", color: "#000", borderRadius: 14, padding: 14, opacity: s, transform: `translateY(${(1 - s) * 120}px) rotate(${(1 - s) * -6}deg)` }}>
               <Img src={staticFile(`art/cables/cable-${file}.png`)} style={{ width: "100%", height: 150, objectFit: "contain" }} />
@@ -29,7 +29,7 @@ export const Cables: React.FC = () => {
       <div style={{ position: "absolute", left: 96, bottom: 230, fontFamily: "ui-monospace, monospace", fontSize: 150, fontWeight: 700, color: YELLOW, textShadow: "0 4px 30px rgba(0,0,0,0.6)", opacity: count, transform: `scale(${0.6 + 0.4 * count})`, transformOrigin: "left bottom" }}>
         {Math.round(18 * count)} years
       </div>
-      <Caption from={150} size={40}>to get to one plug. USB 1.0 in 1996; USB-C in 2014. We are not at USB-C yet.</Caption>
+      <Caption from={Math.round(durationInFrames * 0.7)} size={40}>to get to one plug. USB 1.0 in 1996; USB-C in 2014. We are not at USB-C yet.</Caption>
     </Screen>
   );
 };

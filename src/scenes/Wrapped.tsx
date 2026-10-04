@@ -9,8 +9,8 @@ const REASONS = ["No authorization, so the wrapper decides per tool", "A credent
 
 export const Wrapped: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const wrap = spring({ frame: frame - 40, fps, config: { damping: 12 } });
+  const { fps, durationInFrames } = useVideoConfig();
+  const wrap = spring({ frame: frame - Math.round(durationInFrames * 0.12), fps, config: { damping: 12 } });
   return (
     <Screen horizon={0.85}>
       <Caption from={0} top size={52}>We wrapped MCP servers in MCP servers. So did you.</Caption>
@@ -20,7 +20,7 @@ export const Wrapped: React.FC = () => {
       </div>
       <div style={{ position: "absolute", left: 840, top: 250, width: 980 }}>
         {REASONS.map((r, i) => {
-          const s = spring({ frame: frame - 60 - i * 14, fps, config: { damping: 13 } });
+          const s = spring({ frame: frame - Math.round(durationInFrames * 0.25) - i * Math.round(durationInFrames * 0.08), fps, config: { damping: 13 } });
           return (
             <div key={r} style={{ display: "flex", gap: 20, alignItems: "baseline", fontSize: 36, marginBottom: 22, opacity: s, transform: `translateX(${(1 - s) * 60}px)` }}>
               <span style={{ fontFamily: "ui-monospace, monospace", color: CYAN, fontSize: 30 }}>{i + 1}</span>
@@ -29,7 +29,7 @@ export const Wrapped: React.FC = () => {
           );
         })}
       </div>
-      <Caption from={170} size={42}>The one test: is the credential that reaches the upstream different from the one the client sent?</Caption>
+      <Caption from={Math.round(durationInFrames * 0.78)} size={42}>The one test: is the credential that reaches the upstream different from the one the client sent?</Caption>
     </Screen>
   );
 };

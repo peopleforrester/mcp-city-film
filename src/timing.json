@@ -1,0 +1,50 @@
+{
+  "orbit": {
+    "seconds": 36.795208,
+    "frames": 1128
+  },
+  "cables": {
+    "seconds": 34.874083,
+    "frames": 1071
+  },
+  "expected": {
+    "seconds": 25.441958,
+    "frames": 788
+  },
+  "city": {
+    "seconds": 32.585417,
+    "frames": 1002
+  },
+  "gates": {
+    "seconds": 26.608708,
+    "frames": 823
+  },
+  "attack": {
+    "seconds": 34.967958,
+    "frames": 1074
+  },
+  "wrapped": {
+    "seconds": 39.00775,
+    "frames": 1195
+  },
+  "whatif": {
+    "seconds": 29.037083,
+    "frames": 896
+  },
+  "theno": {
+    "seconds": 26.264542,
+    "frames": 812
+  },
+  "sayno": {
+    "seconds": 37.0115,
+    "frames": 1135
+  },
+  "acceptance": {
+    "seconds": 32.724083,
+    "frames": 1006
+  },
+  "close": {
+    "seconds": 31.751875,
+    "frames": 977
+  }
+}

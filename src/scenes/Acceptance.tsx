@@ -2,7 +2,7 @@
 // ABOUTME: The dam, the markers, the summoner, twenty years of no.
 
 import React from "react";
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, useVideoConfig } from "remotion";
 import { Caption, Screen, Shadow } from "../ui";
 
 const BEATS: [string, string][] = [
@@ -12,10 +12,11 @@ const BEATS: [string, string][] = [
   ["summoned", "Do you go after the minions, or the summoner? The summoner is the heart and mind to win."],
   ["twenty-years", "Twenty years of no. Then we handed out magic and said: stay inside the lines."],
 ];
-const STEP = 84;
 
 export const Acceptance: React.FC = () => {
   const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+  const STEP = Math.floor(durationInFrames / BEATS.length);
   const i = Math.min(BEATS.length - 1, Math.floor(frame / STEP));
   return (
     <Screen horizon={0.7}>

@@ -9,16 +9,16 @@ const ASKS: [string, string, string][] = [["Read my email", "Yes", CYAN], ["Draf
 
 export const TheNo: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const whisper = spring({ frame: frame - 150, fps, config: { damping: 20 } });
+  const { fps, durationInFrames } = useVideoConfig();
+  const whisper = spring({ frame: frame - Math.round(durationInFrames * 0.6), fps, config: { damping: 20 } });
   return (
     <Screen horizon={0.7}>
       <Shadow name="doors" opacity={1 - whisper * 0.9} />
-      <Shadow name="whisper" from={150} opacity={whisper} />
+      <Shadow name="whisper" from={Math.round(durationInFrames * 0.6)} opacity={whisper} />
       <Caption from={0} top size={52}>"I want to give the agent access to my email."</Caption>
       <div style={{ position: "absolute", left: 96, top: 300, opacity: 1 - whisper }}>
         {ASKS.map(([ask, ans, color], i) => {
-          const s = spring({ frame: frame - 30 - i * 30, fps, config: { damping: 12 } });
+          const s = spring({ frame: frame - Math.round(durationInFrames * 0.12) - i * Math.round(durationInFrames * 0.1), fps, config: { damping: 12 } });
           return (
             <div key={ask} style={{ display: "flex", gap: 30, alignItems: "baseline", fontSize: 56, marginBottom: 18, opacity: s, transform: `translateX(${(1 - s) * -60}px)` }}>
               <span style={{ fontWeight: 800, color, width: 120 }}>{ans}</span>
@@ -27,7 +27,7 @@ export const TheNo: React.FC = () => {
           );
         })}
       </div>
-      <Caption from={160} size={46}>"I don't see an MCP server for Outlook. Is there some other way we might do this?"</Caption>
+      <Caption from={Math.round(durationInFrames * 0.65)} size={46}>"I don't see an MCP server for Outlook. Is there some other way we might do this?"</Caption>
     </Screen>
   );
 };

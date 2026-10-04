@@ -18,7 +18,7 @@ const SHIPS = [
 export const Orbit: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
-  const x = interpolate(frame, [0, durationInFrames], [-300, 2100]);
+  const x = interpolate(frame, [0, durationInFrames], [-300, 1250]);
   const rise = spring({ frame, fps, config: { damping: 20 } });
   return (
     <Screen horizon={0.74}>
@@ -27,7 +27,7 @@ export const Orbit: React.FC = () => {
       <Skyline seed={11} count={70} maxH={300} rise={rise} />
       <div style={{ position: "absolute", right: 90, top: 70, width: 420 }}>
         {SHIPS.map(([file, name, crew], i) => {
-          const s = spring({ frame: frame - 20 - i * 12, fps, config: { damping: 12 } });
+          const s = spring({ frame: frame - Math.round(durationInFrames * 0.22) - i * Math.round(durationInFrames * 0.075), fps, config: { damping: 12 } });
           return (
             <div key={file} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 16, height: 62, opacity: s, transform: `translateX(${(1 - s) * 80}px)` }}>
               <div style={{ textAlign: "right", fontSize: 22, lineHeight: 1.1 }}>
@@ -40,7 +40,7 @@ export const Orbit: React.FC = () => {
         })}
       </div>
       <Caption from={10} size={72}>Governing MCP for a workforce the size of a city.</Caption>
-      <Caption from={120} top size={34}>So what do we mean by a city? Let me put it in ships.</Caption>
+      <Caption from={Math.round(durationInFrames * 0.1)} top size={34}>So what do we mean by a city? Let me put it in ships.</Caption>
     </Screen>
   );
 };
