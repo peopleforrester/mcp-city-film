@@ -14,7 +14,8 @@ ideas, and the talk's words as captions. Built with Remotion.
 ```bash
 npm install
 npm run dev                                        # Remotion Studio
-npx remotion render src/index.ts Film out/film.mp4  # the whole film
+npx remotion render src/index.ts Film out/film.mp4  # the narrated film
+npx remotion render src/index.ts FilmSilent out/film-silent.mp4  # the captions-only cut
 npx remotion still src/index.ts scene-gates out/gates.jpg --frame=200
 ```
 

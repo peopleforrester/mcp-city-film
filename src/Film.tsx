@@ -21,9 +21,11 @@ export const FPS = 30;
 const CUT = 18;
 
 const T = timing as Record<string, { frames: number }>;
-const frames = (id: string, fallback: number) => T[id]?.frames ?? fallback;
 
-export const SCENES: { id: string; frames: number; node: React.ReactNode }[] = [
+/** The scenes in order. With `narrated` each lasts as long as its clip; without, the shorter captions-only length. */
+export const scenes = (narrated: boolean): { id: string; frames: number; node: React.ReactNode }[] => {
+  const frames = (id: string, fallback: number) => (narrated ? T[id]?.frames : undefined) ?? fallback;
+  return [
   { id: "orbit", frames: frames("orbit", 270), node: <Orbit /> },
   { id: "expected", frames: frames("expected", 180), node: <Expected /> },
   { id: "city", frames: frames("city", 270), node: <City /> },
@@ -35,18 +37,22 @@ export const SCENES: { id: string; frames: number; node: React.ReactNode }[] = [
   { id: "sayno", frames: frames("sayno", 300), node: <City sayNo /> },
   { id: "lever", frames: frames("lever", 480), node: <Lever /> },
   { id: "close", frames: frames("close", 300), node: <Close /> },
-];
+  ];
+};
 
-export const TOTAL_FRAMES = SCENES.reduce((n, s) => n + s.frames, 0) - CUT * (SCENES.length - 1);
+export const SCENES = scenes(true);
+export const SILENT_SCENES = scenes(false);
+export const totalFrames = (list: { frames: number }[]) => list.reduce((n, s) => n + s.frames, 0) - CUT * (list.length - 1);
+export const TOTAL_FRAMES = totalFrames(SCENES);
 
-export const Film: React.FC = () => (
+export const Film: React.FC<{ narrated?: boolean }> = ({ narrated = true }) => (
   <TransitionSeries>
-    {SCENES.flatMap((s, i) => [
+    {(narrated ? SCENES : SILENT_SCENES).flatMap((s, i) => [
       <TransitionSeries.Sequence key={s.id} durationInFrames={s.frames}>
         {s.node}
-        {T[s.id] && <Audio src={staticFile(`voice/${s.id}.mp3`)} />}
+        {narrated && T[s.id] && <Audio src={staticFile(`voice/${s.id}.mp3`)} />}
       </TransitionSeries.Sequence>,
-      ...(i < SCENES.length - 1 ? [<TransitionSeries.Transition key={`${s.id}-cut`} presentation={fade()} timing={linearTiming({ durationInFrames: CUT })} />] : []),
+      ...(i < (narrated ? SCENES : SILENT_SCENES).length - 1 ? [<TransitionSeries.Transition key={`${s.id}-cut`} presentation={fade()} timing={linearTiming({ durationInFrames: CUT })} />] : []),
     ])}
   </TransitionSeries>
 );

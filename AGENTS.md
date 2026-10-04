@@ -8,5 +8,5 @@ ABOUTME: The film says what the deck says; the deck is the source of every claim
 - The look is cut paper on the cyan-to-navy screen (`src/ui.tsx`). New scenes
   use `Screen`, `Caption` and `Shadow`; nothing photoreal.
 - `npm run dev` opens Remotion Studio; `npx remotion render src/index.ts Film out/film.mp4`
-  renders the film; `scene-<id>` compositions render one scene.
+  renders the narrated film and `FilmSilent` the captions-only cut; `scene-<id>` compositions render one scene.
 - Work on `staging`; promote to `main` once a render has been watched.

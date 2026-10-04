@@ -24,7 +24,8 @@ export const WhatIf: React.FC = () => {
           );
         })}
       </div>
-      <Caption from={Math.round(durationInFrames * 0.55)} size={44}>You handed everyone a relentless hacker. On your hardware. Inside your zones. With your tokens.</Caption>
+      <Caption from={Math.round(durationInFrames * 0.55)} end={Math.round(durationInFrames * 0.8)} size={44}>You handed everyone a relentless hacker. On your hardware. Inside your zones. With your tokens.</Caption>
+      <Caption from={Math.round(durationInFrames * 0.82)} size={44}>It runs on the end-user device, as that user. People forget that a laptop is a server.</Caption>
     </Screen>
   );
 };
