@@ -1,9 +1,8 @@
-// ABOUTME: Scene 10: the biggest lever, in six of the deck's shadow pictures with the deck's lines.
+// ABOUTME: Scene 10: the biggest lever, in six of the deck's shadow pictures, each on its spoken line.
 // ABOUTME: Hearts and minds, love your users, say no with a why, send the signals, run it like a product.
 
 import React from "react";
-import { useCurrentFrame, useVideoConfig } from "remotion";
-import { Caption, Screen, Shadow } from "../ui";
+import { Caption, Screen, Shadow, useBeats } from "../ui";
 
 const BEATS: [string, string][] = [
   ["question-city", "So what was the biggest lever? Not the policy, the architecture, the proxies or the registries alone."],
@@ -15,14 +14,12 @@ const BEATS: [string, string][] = [
 ];
 
 export const Lever: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { durationInFrames } = useVideoConfig();
-  const STEP = Math.floor(durationInFrames / BEATS.length);
-  const i = Math.min(BEATS.length - 1, Math.floor(frame / STEP));
+  const b = useBeats("lever");
+  const i = Math.min(BEATS.length - 1, b.current);
   return (
     <Screen horizon={0.7}>
       <Shadow key={BEATS[i][0]} name={BEATS[i][0]} from={0} />
-      <Caption key={i} from={i * STEP + 4} size={48}>{BEATS[i][1]}</Caption>
+      <Caption key={i} from={b.at(i)} end={b.end(i)} size={48}>{BEATS[i][1]}</Caption>
     </Screen>
   );
 };

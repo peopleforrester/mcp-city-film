@@ -3,7 +3,7 @@
 
 import React from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { CYAN, Caption, PINK, Screen } from "../ui";
+import { CYAN, Caption, PINK, Screen, useBeats } from "../ui";
 
 const D = [
   { name: "Managed device", color: "#ff3c64", x: 100, y: 230, w: 400, h: 520 },
@@ -29,9 +29,14 @@ const COLOR: Record<string, string> = { tool: "#ed561b", model: "#bc37de", contr
 
 export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
-  // When you say no the alleys light up; in the architecture scene they are only hinted at, late, as the deck's two red dashed lines.
-  const alley = sayNo ? spring({ frame: frame - Math.round(durationInFrames * 0.35), fps, config: { damping: 14 } }) : 0.35 * spring({ frame: frame - Math.round(durationInFrames * 0.72), fps, config: { damping: 14 } });
+  const { fps } = useVideoConfig();
+  const b = useBeats(sayNo ? "sayno" : "city");
+  // When you say no the alleys light up one at a time as they are spoken; in the architecture scene they are only hinted at, as the deck's two red dashed lines.
+  const hint = 0.35 * spring({ frame: frame - b.at(2), fps, config: { damping: 14 } });
+  const alleys: Record<string, number> = {
+    OUT: sayNo ? spring({ frame: frame - b.at(0) - 20, fps, config: { damping: 14 } }) : hint,
+    TM: sayNo ? spring({ frame: frame - b.at(1) - 40, fps, config: { damping: 14 } }) : hint,
+  };
   return (
     <Screen horizon={0.95}>
       <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
@@ -46,7 +51,7 @@ export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
         })}
         {E.map(([a, b, k], i) => {
           const [ax, ay] = N[a]; const [bx, by] = N[b];
-          const on = k === "bypass" ? alley : spring({ frame: frame - 30 - i * 3, fps, config: { damping: 20 } });
+          const on = k === "bypass" ? alleys[b] : spring({ frame: frame - 30 - i * 3, fps, config: { damping: 20 } });
           const dots = 3;
           return (
             <g key={`${a}${b}`} opacity={on}>
@@ -61,7 +66,7 @@ export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
         {Object.entries(N).map(([id, [x, y, label]], i) => {
           const bypass = id === "OUT" || id === "TM";
           const dark = id === "OBS" && sayNo;
-          const s = bypass ? alley : spring({ frame: frame - 20 - i * 3, fps, config: { damping: 12 } });
+          const s = bypass ? alleys[id] : spring({ frame: frame - 20 - i * 3, fps, config: { damping: 12 } });
           return (
             <g key={id} opacity={s} transform={`translate(${x},${y}) scale(${0.6 + 0.4 * s})`}>
               <rect x={-30} y={-54} width={60} height={54} fill={dark ? "#1b2535" : "#02050c"} />
@@ -73,14 +78,18 @@ export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
       </svg>
       {sayNo ? (
         <>
-          <Caption from={0} top size={56}>So we said no.</Caption>
-          <Caption from={Math.round(durationInFrames * 0.4)} size={42}>PowerShell against classic Outlook. The approved browser in debug mode, walking Teams. The shell and the browser never touch the gate.</Caption>
+          <Caption from={b.at(0)} top size={56}>So we said no.</Caption>
+          <Caption from={b.at(0)} end={b.at(1)} size={42}>The agent wrote PowerShell against classic Outlook. It read and sent mail as the user.</Caption>
+          <Caption from={b.at(1)} end={b.at(2)} size={42}>Then Teams. The approved browser in remote-debugging mode; the agent walked the browser, and the browser walked Teams.</Caption>
+          <Caption from={b.at(2)} size={42}>The two red dashed lines. The shell and the browser never touch the gate.</Caption>
         </>
       ) : (
         <>
-          <Caption from={0} top size={56}>The architecture, done properly.</Caption>
-          <Caption from={Math.round(durationInFrames * 0.1)} end={Math.round(durationInFrames * 0.72)} size={42}>A person. A device. An agent. One gate, a proxy and a registry, that every call goes through. The tools.</Caption>
-          <Caption from={Math.round(durationInFrames * 0.74)} size={42}>The two red dashed lines: the shell and the browser never touch any of it. Hold that thought.</Caption>
+          <Caption from={b.at(0)} end={b.at(1)} top size={56}>The architecture, the simple version.</Caption>
+          <Caption from={b.at(1)} top size={56}>The architecture, done properly.</Caption>
+          <Caption from={b.at(0)} end={b.at(1)} size={42}>A person. A device. An agent. One gate, a proxy and a registry, that every call goes through. The tools.</Caption>
+          <Caption from={b.at(1)} end={b.at(2)} size={42}>The managed device. Tool traffic through the proxy and the gateway. Model traffic through its own. The control plane feeding all of it.</Caption>
+          <Caption from={b.at(2)} size={42}>The two red dashed lines: the shell and the browser never touch any of it. Hold that thought.</Caption>
         </>
       )}
     </Screen>

@@ -1,8 +1,8 @@
 // ABOUTME: The film: ten scenes in order, cut with fades, the keynote's story as a shadow play.
-// ABOUTME: Each scene lasts as long as its voice-over clip plus a breath (src/timing.json); the total is computed from that.
+// ABOUTME: Each scene lasts as long as its voice beats plus a breath (src/timing.json); the total is computed from that.
 
 import React from "react";
-import { Audio, staticFile } from "remotion";
+import { Audio, Sequence, staticFile } from "remotion";
 import timing from "./timing.json";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
@@ -20,7 +20,7 @@ import { Orbit } from "./scenes/Orbit";
 export const FPS = 30;
 const CUT = 18;
 
-const T = timing as Record<string, { frames: number }>;
+const T = timing as Record<string, { frames: number; beats: number[] }>;
 
 /** The scenes in order. With `narrated` each lasts as long as its clip; without, the shorter captions-only length. */
 export const scenes = (narrated: boolean): { id: string; frames: number; node: React.ReactNode }[] => {
@@ -50,7 +50,11 @@ export const Film: React.FC<{ narrated?: boolean }> = ({ narrated = true }) => (
     {(narrated ? SCENES : SILENT_SCENES).flatMap((s, i) => [
       <TransitionSeries.Sequence key={s.id} durationInFrames={s.frames}>
         {s.node}
-        {narrated && T[s.id] && <Audio src={staticFile(`voice/${s.id}.mp3`)} />}
+        {narrated && T[s.id]?.beats.map((f, j, all) => (
+          <Sequence key={j} from={all.slice(0, j).reduce((n, b) => n + b, 0)} durationInFrames={f}>
+            <Audio src={staticFile(`voice/${s.id}-${j}.mp3`)} />
+          </Sequence>
+        ))}
       </TransitionSeries.Sequence>,
       ...(i < (narrated ? SCENES : SILENT_SCENES).length - 1 ? [<TransitionSeries.Transition key={`${s.id}-cut`} presentation={fade()} timing={linearTiming({ durationInFrames: CUT })} />] : []),
     ])}
