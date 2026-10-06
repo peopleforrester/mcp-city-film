@@ -8,8 +8,8 @@ const deck = JSON.parse(readFileSync(new URL("../src/deck/deck.json", import.met
 const key = process.env.GEMINI_API_KEY;
 if (!key) throw new Error("GEMINI_API_KEY is not set");
 const MODEL = "gemini-3.8-flash-tts";
-const VOICE = "Charon"; // the film's voice, so the two pieces sound like one speaker
-const TEMPO = "0.9"; // unprompted, the model reads at about 205 words a minute; this lands it near 165, a keynote pace
+const VOICE = "Sulafat"; // a woman's voice: median pitch 186 Hz on a full slide of notes, the highest of four measured; the film and the deck share it
+const TEMPO = "0.97"; // Sulafat reads a full passage at about 170 words a minute; this lands it near 165, a keynote pace
 const FPS = 30;
 const LEAD = 6; // frames before the voice starts, so a slide lands before it is spoken about
 const TAIL = 12; // frames of air after the voice stops

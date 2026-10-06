@@ -1,7 +1,7 @@
 // ABOUTME: The shared stage pieces: the backlit screen, captions, the shadow-play image, and small motion helpers.
 // ABOUTME: Everything in the film is cut paper on a cyan-to-navy screen; this file is where that look lives.
 
-import React, { useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { AbsoluteFill, Img, continueRender, delayRender, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import timing from "./timing.json";
 
@@ -62,10 +62,15 @@ export function useRise(from = 0, damping = 14): number {
   return spring({ frame: frame - from, fps, config: { damping, mass: 0.8 } });
 }
 
+/** Whether burned-in captions draw. The narrated cut turns them off: the player's closed captions carry the spoken words. */
+export const CaptionsShown = createContext(true);
+
 /** A caption that slides up and in, and fades out `out` frames before `end` when given. */
 export const Caption: React.FC<{ from?: number; end?: number; size?: number; children: React.ReactNode; top?: boolean }> = ({ from = 0, end, size = 54, children, top = false }) => {
+  const shown = useContext(CaptionsShown);
   const frame = useCurrentFrame();
   const rise = useRise(from);
+  if (!shown) return null;
   const fade = end ? interpolate(frame, [end - 12, end], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 1;
   return (
     <div style={{ position: "absolute", left: 96, right: 96, [top ? "top" : "bottom"]: 88, opacity: rise * fade, transform: `translateY(${(1 - rise) * 30}px)`, fontSize: size, fontWeight: 600, lineHeight: 1.15, textShadow: "0 2px 18px rgba(0,0,0,0.7)", maxWidth: 1400 }}>

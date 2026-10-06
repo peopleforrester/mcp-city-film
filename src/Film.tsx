@@ -3,10 +3,12 @@
 
 import React from "react";
 import { Audio, Sequence, staticFile } from "remotion";
+import { CaptionsShown } from "./ui";
 import timing from "./timing.json";
 import { TransitionSeries, linearTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { Attack } from "./scenes/Attack";
+import { Bypass } from "./scenes/Bypass";
 import { City } from "./scenes/City";
 import { Close } from "./scenes/Close";
 import { Expected } from "./scenes/Expected";
@@ -34,7 +36,7 @@ export const scenes = (narrated: boolean): { id: string; frames: number; node: R
   { id: "wrapped", frames: frames("wrapped", 280), node: <Wrapped /> },
   { id: "whatif", frames: frames("whatif", 260), node: <WhatIf /> },
   { id: "theno", frames: frames("theno", 300), node: <TheNo /> },
-  { id: "sayno", frames: frames("sayno", 300), node: <City sayNo /> },
+  { id: "sayno", frames: frames("sayno", 300), node: <Bypass /> },
   { id: "lever", frames: frames("lever", 480), node: <Lever /> },
   { id: "close", frames: frames("close", 300), node: <Close /> },
   ];
@@ -46,6 +48,7 @@ export const totalFrames = (list: { frames: number }[]) => list.reduce((n, s) =>
 export const TOTAL_FRAMES = totalFrames(SCENES);
 
 export const Film: React.FC<{ narrated?: boolean }> = ({ narrated = true }) => (
+  <CaptionsShown.Provider value={!narrated}>
   <TransitionSeries>
     {(narrated ? SCENES : SILENT_SCENES).flatMap((s, i) => [
       <TransitionSeries.Sequence key={s.id} durationInFrames={s.frames}>
@@ -59,4 +62,5 @@ export const Film: React.FC<{ narrated?: boolean }> = ({ narrated = true }) => (
       ...(i < (narrated ? SCENES : SILENT_SCENES).length - 1 ? [<TransitionSeries.Transition key={`${s.id}-cut`} presentation={fade()} timing={linearTiming({ durationInFrames: CUT })} />] : []),
     ])}
   </TransitionSeries>
+  </CaptionsShown.Provider>
 );

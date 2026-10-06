@@ -1,9 +1,9 @@
 // ABOUTME: Scene 2: the five questions the audience expects, set aside in rainbow tiles.
 // ABOUTME: "My message today is remarkably untechnical."
 
-import React from "react";
+import React, { useContext } from "react";
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { Caption, Screen, ZONE, useBeats } from "../ui";
+import { Caption, CaptionsShown, Screen, ZONE, useBeats } from "../ui";
 
 const TOPICS = ["How many people adopted MCP?", "What architecture do you use?", "What is your process for evaluation?", "Did you run into security issues?", "Things we thought were unusual"];
 
@@ -11,6 +11,7 @@ export const Expected: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps, durationInFrames } = useVideoConfig();
   const b = useBeats("expected");
+  const words = useContext(CaptionsShown);
   const leave = interpolate(frame, [durationInFrames - 40, durationInFrames - 8], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   return (
     <Screen horizon={0.9}>
@@ -20,7 +21,7 @@ export const Expected: React.FC = () => {
           const s = spring({ frame: frame - b.at(1) - i * 10, fps, config: { damping: 10 } });
           return (
             <div key={t} style={{ background: ZONE[i], color: "#000", borderRadius: 18, padding: 28, height: 300, fontSize: 34, fontWeight: 700, display: "flex", alignItems: "flex-end", opacity: s * (1 - leave), transform: `translateY(${(1 - s) * 80 + leave * 500}px) rotate(${leave * (i - 2) * 8}deg)` }}>
-              {t}
+              {words ? t : <span style={{ fontSize: 140, fontWeight: 800, lineHeight: 1 }}>{i + 1}</span>}
             </div>
           );
         })}

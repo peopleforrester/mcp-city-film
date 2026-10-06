@@ -7,8 +7,8 @@ const narration = JSON.parse(readFileSync(new URL("../src/narration.json", impor
 const key = process.env.GEMINI_API_KEY;
 if (!key) throw new Error("GEMINI_API_KEY is not set");
 const MODEL = "gemini-3.8-flash-tts";
-const VOICE = "Charon";
-const TEMPO = "1.12"; // the model reads at about 140 words a minute; this lands it at a keynote pace
+const VOICE = "Sulafat"; // a woman's voice: median pitch 186 Hz on a full slide of notes, the highest of four measured; the film and the deck share it
+const TEMPO = "0.97"; // Sulafat reads a full passage at about 170 words a minute; this lands it near 165, a keynote pace
 // No style prompt: on a short beat the model reads the instruction aloud. The pace comes from the tempo filter.
 const FPS = 30;
 const GAP = 5; // frames of air between beats

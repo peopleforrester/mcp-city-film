@@ -1,4 +1,4 @@
-// ABOUTME: Scenes 4 and 9b: the architecture as a city map; districts light up, traffic runs, and when you say no the alleys light up.
+// ABOUTME: Scene 3: the architecture as a city map; districts light up, traffic runs, and the two alleys are hinted at.
 // ABOUTME: Same districts, buildings and roads as the site's living map, drawn flat.
 
 import React from "react";
@@ -27,16 +27,13 @@ const E: [string, string, string][] = [
 ];
 const COLOR: Record<string, string> = { tool: "#ed561b", model: "#bc37de", control: "#0b8a5c", audit: "#9a9a9a", bypass: PINK };
 
-export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
+export const City: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const b = useBeats(sayNo ? "sayno" : "city");
-  // When you say no the alleys light up one at a time as they are spoken; in the architecture scene they are only hinted at, as the deck's two red dashed lines.
+  const b = useBeats("city");
+  // The alleys are only hinted at here, as the deck's two red dashed lines; the Bypass scene tells what went down them.
   const hint = 0.35 * spring({ frame: frame - b.at(2), fps, config: { damping: 14 } });
-  const alleys: Record<string, number> = {
-    OUT: sayNo ? spring({ frame: frame - b.at(0) - 20, fps, config: { damping: 14 } }) : hint,
-    TM: sayNo ? spring({ frame: frame - b.at(1) - 40, fps, config: { damping: 14 } }) : hint,
-  };
+  const alleys: Record<string, number> = { OUT: hint, TM: hint };
   return (
     <Screen horizon={0.95}>
       <svg width={1920} height={1080} style={{ position: "absolute", inset: 0 }}>
@@ -51,7 +48,7 @@ export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
         })}
         {E.map(([a, b, k], i) => {
           const [ax, ay] = N[a]; const [bx, by] = N[b];
-          const on = k === "bypass" ? alleys[b] : spring({ frame: frame - 30 - i * 3, fps, config: { damping: 20 } });
+          const on = k === "bypass" ? alleys[b] ?? 0 : spring({ frame: frame - 30 - i * 3, fps, config: { damping: 20 } });
           const dots = 3;
           return (
             <g key={`${a}${b}`} opacity={on}>
@@ -65,33 +62,23 @@ export const City: React.FC<{ sayNo?: boolean }> = ({ sayNo = false }) => {
         })}
         {Object.entries(N).map(([id, [x, y, label]], i) => {
           const bypass = id === "OUT" || id === "TM";
-          const dark = id === "OBS" && sayNo;
-          const s = bypass ? alleys[id] : spring({ frame: frame - 20 - i * 3, fps, config: { damping: 12 } });
+          const s = bypass ? alleys[id] ?? 0 : spring({ frame: frame - 20 - i * 3, fps, config: { damping: 12 } });
           return (
             <g key={id} opacity={s} transform={`translate(${x},${y}) scale(${0.6 + 0.4 * s})`}>
-              <rect x={-30} y={-54} width={60} height={54} fill={dark ? "#1b2535" : "#02050c"} />
-              <rect x={-10} y={-44} width={20} height={34} fill={bypass ? PINK : dark ? "#24303f" : CYAN} opacity={0.8} />
+              <rect x={-30} y={-54} width={60} height={54} fill="#02050c" />
+              <rect x={-10} y={-44} width={20} height={34} fill={bypass ? PINK : CYAN} opacity={0.8} />
               <text x={0} y={26} textAnchor="middle" fill="#f8f8f2" fontSize={22} fontWeight={600}>{label}</text>
             </g>
           );
         })}
       </svg>
-      {sayNo ? (
-        <>
-          <Caption from={b.at(0)} top size={56}>So we said no.</Caption>
-          <Caption from={b.at(0)} end={b.at(1)} size={42}>The agent wrote PowerShell against classic Outlook. It read and sent mail as the user.</Caption>
-          <Caption from={b.at(1)} end={b.at(2)} size={42}>Then Teams. The approved browser in remote-debugging mode; the agent walked the browser, and the browser walked Teams.</Caption>
-          <Caption from={b.at(2)} size={42}>The two red dashed lines. The shell and the browser never touch the gate.</Caption>
-        </>
-      ) : (
-        <>
+      <>
           <Caption from={b.at(0)} end={b.at(1)} top size={56}>The architecture, the simple version.</Caption>
           <Caption from={b.at(1)} top size={56}>The architecture, done properly.</Caption>
           <Caption from={b.at(0)} end={b.at(1)} size={42}>A person. A device. An agent. One gate, a proxy and a registry, that every call goes through. The tools.</Caption>
           <Caption from={b.at(1)} end={b.at(2)} size={42}>The managed device. Tool traffic through the proxy and the gateway. Model traffic through its own. The control plane feeding all of it.</Caption>
           <Caption from={b.at(2)} size={42}>The two red dashed lines: the shell and the browser never touch any of it. Hold that thought.</Caption>
-        </>
-      )}
+      </>
     </Screen>
   );
 };

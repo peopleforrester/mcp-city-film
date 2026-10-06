@@ -1,9 +1,9 @@
 // ABOUTME: Scene 8: the email ask (yes, yes, no), the human-tools line, the no, and the whisper to the agent.
 // ABOUTME: Then the city scene shows where the traffic went.
 
-import React from "react";
+import React, { useContext } from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { CYAN, Caption, PINK, Screen, Shadow, useBeats } from "../ui";
+import { CYAN, Caption, CaptionsShown, PINK, Screen, Shadow, useBeats } from "../ui";
 
 const ASKS: [string, string, string][] = [["Read my email", "Yes", CYAN], ["Draft my replies", "Yes", CYAN], ["Send as me", "No", PINK]];
 
@@ -11,6 +11,7 @@ export const TheNo: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const b = useBeats("theno");
+  const words = useContext(CaptionsShown);
   const whisper = spring({ frame: frame - b.at(5), fps, config: { damping: 20 } });
   return (
     <Screen horizon={0.7}>
@@ -22,8 +23,14 @@ export const TheNo: React.FC = () => {
           const s = spring({ frame: frame - b.at(i) - (i === 0 ? 40 : 0), fps, config: { damping: 12 } });
           return (
             <div key={ask} style={{ display: "flex", gap: 30, alignItems: "baseline", fontSize: 56, marginBottom: 18, opacity: s, transform: `translateX(${(1 - s) * -60}px)` }}>
-              <span style={{ fontWeight: 800, color, width: 120 }}>{ans}</span>
-              <span>{ask}</span>
+              {words ? (
+                <>
+                  <span style={{ fontWeight: 800, color, width: 120 }}>{ans}</span>
+                  <span>{ask}</span>
+                </>
+              ) : (
+                <span style={{ fontWeight: 800, color, fontSize: 120, lineHeight: 1, textShadow: "0 4px 24px rgba(0,0,0,0.7)" }}>{ans === "Yes" ? "✔" : "✘"}</span>
+              )}
             </div>
           );
         })}
