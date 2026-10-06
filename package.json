@@ -35,6 +35,10 @@
     "deck:stills": "node scripts/stills-deck.mjs",
     "render:deck": "remotion render src/index.ts Deck out/deck.mp4",
     "test": "node --test \"tests/*.test.*\"",
-    "test:e2e": "node --test \"tests/e2e/*.test.*\""
+    "test:e2e": "node --test \"tests/e2e/*.test.*\"",
+    "architecture:extract": "node scripts/extract-architecture.mjs",
+    "architecture:voice": "node scripts/narrate-architecture.mjs",
+    "architecture:captions": "node scripts/captions-architecture.mjs",
+    "render:architecture": "remotion render src/index.ts Architecture out/architecture.mp4"
   }
 }

@@ -1,16 +1,10 @@
-// ABOUTME: Reads each slide's speaker notes from src/deck/deck.json aloud with Gemini's speech model, one clip per slide.
+// ABOUTME: Reads each slide's speaker notes from src/deck/deck.json aloud with the shared voice, one clip per slide.
 // ABOUTME: Writes src/deck/timing.json from the clip lengths; needs GEMINI_API_KEY and skips existing clips unless FORCE=1.
 import { createHash } from "node:crypto";
-import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { FPS, seconds, speak } from "./speech.mjs";
 
 const deck = JSON.parse(readFileSync(new URL("../src/deck/deck.json", import.meta.url), "utf8"));
-const key = process.env.GEMINI_API_KEY;
-if (!key) throw new Error("GEMINI_API_KEY is not set");
-const MODEL = "gemini-3.8-flash-tts";
-const VOICE = "Sulafat"; // a woman's voice: median pitch 186 Hz on a full slide of notes, the highest of four measured; the film and the deck share it
-const TEMPO = "0.97"; // Sulafat reads a full passage at about 170 words a minute; this lands it near 165, a keynote pace
-const FPS = 30;
 const LEAD = 6; // frames before the voice starts, so a slide lands before it is spoken about
 const TAIL = 12; // frames of air after the voice stops
 mkdirSync(new URL("../public/deck-voice/", import.meta.url), { recursive: true });
@@ -20,26 +14,8 @@ for (const s of deck.slides) {
   // A clip is named by its text, so an edited note gets a new clip and an unchanged one is reused.
   const name = `deck-voice/${String(s.number).padStart(2, "0")}-${createHash("sha1").update(s.notes).digest("hex").slice(0, 8)}.mp3`;
   const out = new URL(`../public/${name}`, import.meta.url);
-  if (!existsSync(out) || process.env.FORCE === "1") {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
-      method: "POST",
-      headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
-      // No style prompt: the model reads an instruction aloud on short passages.
-      body: JSON.stringify({ contents: [{ parts: [{ text: s.notes }] }], generationConfig: { responseModalities: ["AUDIO"], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE } } } } }),
-    });
-    if (!res.ok) throw new Error(`slide ${s.number}: ${res.status} ${await res.text()}`);
-    const part = (await res.json()).candidates?.[0]?.content?.parts?.find((p) => p.inlineData);
-    if (!part) throw new Error(`slide ${s.number}: no audio in response`);
-    const wav = new URL(out.href.replace(/\.mp3$/, ".wav"));
-    writeFileSync(wav, Buffer.from(part.inlineData.data, "base64"));
-    const trim = "silenceremove=start_periods=1:start_threshold=-45dB";
-    const encode = (filter) => execFileSync("ffmpeg", ["-v", "error", "-y", "-i", wav.pathname, "-af", filter, "-codec:a", "libmp3lame", "-q:a", "3", out.pathname]);
-    encode(`${trim},areverse,${trim},areverse,adelay=${Math.round((LEAD / FPS) * 1000)},atempo=${TEMPO}`);
-    if (statSync(out).size < 2000) encode(`atempo=${TEMPO}`);
-    execFileSync("rm", [wav.pathname]);
-  }
-  const seconds = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", out.pathname]).toString());
-  slides.push({ frames: Math.ceil(seconds * FPS) + TAIL, clip: name });
+  if (!existsSync(out) || process.env.FORCE === "1") await speak(s.notes, out, { lead: LEAD });
+  slides.push({ frames: Math.ceil(seconds(out) * FPS) + TAIL, clip: name });
   process.stdout.write(`\rslide ${s.number}/${deck.slides.length}`);
 }
 process.stdout.write("\n");
