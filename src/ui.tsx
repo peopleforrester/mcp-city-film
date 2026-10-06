@@ -3,6 +3,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AbsoluteFill, Img, continueRender, delayRender, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { beatStarts, currentBeat } from "./beats";
 import timing from "./timing.json";
 
 const TIMING = timing as Record<string, { frames: number; beats: number[] }>;
@@ -12,15 +13,10 @@ export function useBeats(id: string) {
   const frame = useCurrentFrame();
   const { durationInFrames } = useVideoConfig();
   const t = TIMING[id];
-  // In the captions-only cut the scene is shorter than its narration; the beats scale to fit.
-  const scale = t ? durationInFrames / t.frames : 1;
-  const starts: number[] = [];
-  let acc = 0;
-  for (const f of t?.beats ?? []) { starts.push(Math.round(acc * scale)); acc += f; }
+  const starts = beatStarts(t?.beats ?? [], t?.frames ?? 0, durationInFrames);
   const at = (i: number) => starts[i] ?? Math.round((durationInFrames * i) / Math.max(1, starts.length || 1));
-  const end = (i: number) => (i + 1 < starts.length ? starts[i + 1] : durationInFrames);
-  const current = Math.max(0, starts.filter((s) => s <= frame).length - 1);
-  return { at, end, current, count: starts.length };
+  const end = (i: number) => (i + 1 < starts.length ? starts[i + 1]! : durationInFrames);
+  return { at, end, current: currentBeat(starts, frame), count: starts.length };
 }
 
 

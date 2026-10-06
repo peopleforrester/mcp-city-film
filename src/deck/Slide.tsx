@@ -2,16 +2,10 @@
 // ABOUTME: Elements new to a slide rise in one after another; elements carried over from the previous slide hold still, so builds read as builds.
 
 import React, { useEffect, useState } from "react";
+import { freshElements } from "./signature";
+import type { Element, Paragraph, SlideData } from "./types";
 import { AbsoluteFill, Img, cancelRender, continueRender, delayRender, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 
-export type Run = { text: string; color: string | null; size: number | null; bold: boolean; italic: boolean; underline: boolean; font: string | null; weight: number; baseline: string };
-export type Paragraph = { align: string; lineSpacing: number; spaceAbove: number; spaceBelow: number; indentStart: number; indentFirstLine: number; bullet: string | null; runs: Run[] };
-type Base = { id: string; layer: "layout" | "slide"; x: number; y: number; w: number; h: number };
-export type Shape = Base & { kind: "shape"; shape: string; fill: { color: string; alpha: number } | null; outline: { color: string; alpha: number; weight: number; dash: string } | null; valign: string; paragraphs: Paragraph[] };
-export type Picture = Base & { kind: "image"; src: string; crop: { l: number; r: number; t: number; b: number } };
-export type Line = Base & { kind: "line"; stroke: { color: string; alpha: number } | null; weight: number; dash: string; arrow: string };
-export type Element = Shape | Picture | Line;
-export type SlideData = { id: string; number: number; background: string; notes: string; elements: Element[] };
 
 const FONTS: [string, string, string][] = [
   ["Red Hat Display", "fonts/red-hat-display-variable.woff2", "normal"],
@@ -92,15 +86,6 @@ const Draw: React.FC<{ e: Element }> = ({ e }) => {
   );
 };
 
-/** What makes two elements the same thing on screen: kind, place, and content. */
-export function signature(e: Element): string {
-  const at = `${Math.round(e.x / 4)},${Math.round(e.y / 4)},${Math.round(e.w / 4)},${Math.round(e.h / 4)}`;
-  if (e.kind === "image") return `i:${e.src}:${at}`;
-  if (e.kind === "line") return `l:${at}`;
-  return `s:${at}:${e.fill?.color ?? ""}:${e.paragraphs.map((p) => p.runs.map((r) => r.text).join("")).join("|")}`;
-}
-
-const isEmpty = (e: Element) => e.kind === "shape" && !e.fill && !e.outline && e.paragraphs.every((p) => p.runs.every((r) => !r.text.trim()));
 
 /**
  * One slide. `held` holds the signatures already on screen from the previous slide; those draw
@@ -110,7 +95,7 @@ export const Slide: React.FC<{ slide: SlideData; held?: Set<string>; spread?: nu
   useDeckFonts();
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const fresh = slide.elements.filter((e) => e.layer === "slide" && !isEmpty(e) && !held?.has(signature(e)));
+  const fresh = freshElements(slide.elements, held);
   const step = fresh.length > 1 ? Math.min(12, spread / (fresh.length - 1)) : 0;
   return (
     <AbsoluteFill style={{ background: slide.background, overflow: "hidden" }}>

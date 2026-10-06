@@ -17,4 +17,7 @@ ABOUTME: Both say what the deck says; the deck is the source of every claim.
 - `npm run render:deck` renders the deck video; `slide-NN` compositions render one slide,
   and `npm run deck:stills` writes every slide's settled frame to `out/deck-stills/` for a
   side-by-side check against the deck's PDF export.
+- `npm run lint`, `npm test` and `npm run test:e2e` all pass, with no warnings in the output,
+  before a push. Pure logic lives in `src/beats.ts`, `src/deck/signature.ts` and
+  `scripts/deck-model.mjs` so it can be tested without rendering.
 - Work on `staging`; promote to `main` once a render has been watched.

@@ -22,6 +22,17 @@ npx remotion render src/index.ts FilmSilent out/film-silent.mp4  # the captions-
 npx remotion still src/index.ts scene-gates out/gates.jpg --frame=200
 ```
 
+## Test it
+
+```bash
+npm run lint       # eslint and the type checker
+npm test           # unit and integration: beat timing, the deck model, build signatures, data integrity
+npm run test:e2e   # bundles the project, checks composition lengths, renders real stills (about a minute)
+```
+
+`npm test` fails when the deck has been re-extracted with changed speaker
+notes but not re-voiced, naming the slide.
+
 ## The deck video
 
 The deck is the source. Pull it, voice it, render it:

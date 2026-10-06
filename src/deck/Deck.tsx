@@ -5,7 +5,9 @@ import React from "react";
 import { Audio, Sequence, Series, staticFile } from "remotion";
 import deck from "./deck.json";
 import timing from "./timing.json";
-import { Slide, type SlideData, signature } from "./Slide";
+import { Slide } from "./Slide";
+import { signature } from "./signature";
+import type { SlideData } from "./types";
 
 export type Timing = { track: string | null; slides: { frames: number; clip: string | null }[] };
 
