@@ -13,7 +13,9 @@
     "remotion": "4.0.532"
   },
   "devDependencies": {
+    "@remotion/bundler": "4.0.532",
     "@remotion/eslint-config-flat": "4.0.532",
+    "@remotion/renderer": "4.0.532",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
     "eslint": "9.39.5",
@@ -25,6 +27,10 @@
     "build": "remotion bundle",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc",
-    "render": "remotion render src/index.ts Film out/film.mp4"
+    "render": "remotion render src/index.ts Film out/film.mp4",
+    "deck:extract": "node scripts/extract-deck.mjs",
+    "deck:voice": "node scripts/narrate-deck.mjs",
+    "deck:stills": "node scripts/stills-deck.mjs",
+    "render:deck": "remotion render src/index.ts Deck out/deck.mp4"
   }
 }

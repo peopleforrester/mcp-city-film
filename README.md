@@ -1,9 +1,12 @@
-# The shadow-play film
+# The shadow-play film and the deck video
 
-A cartoon walkthrough of **Governing MCP for a Workforce the Size of a City**,
+Two videos of one keynote. The film is a cartoon walkthrough of **Governing MCP for a Workforce the Size of a City**,
 the keynote at MCP Dev Summit Toronto on 6 October 2026, as a shadow play:
 cut-paper silhouettes on a backlit screen, the deck's own art, the site's
-ideas, and the talk's words as captions. Built with Remotion.
+ideas, and the talk's words as captions. The deck video is the talk itself:
+every slide of the deck redrawn from the Slides API, its builds animated,
+each slide held for its stretch of the voice track. Both are built with
+Remotion.
 
 - The talk's site: https://mcp.michaelrishiforrester.com
 - The collateral: https://github.com/peopleforrester/mcp-for-a-city
@@ -18,6 +21,28 @@ npx remotion render src/index.ts Film out/film.mp4  # the narrated film
 npx remotion render src/index.ts FilmSilent out/film-silent.mp4  # the captions-only cut
 npx remotion still src/index.ts scene-gates out/gates.jpg --frame=200
 ```
+
+## The deck video
+
+The deck is the source. Pull it, voice it, render it:
+
+```bash
+# A Slides API token, minted from a gog export with the fleet's gdoc-update helper:
+gog auth tokens export michaelrishiforrester@gmail.com --out tok.json
+export SLIDES_ACCESS_TOKEN=$(python3 -c "import importlib.util,pathlib; s=importlib.util.spec_from_file_location('g','$HOME/repos/workflow/scripts-knowledge/bin/gdoc-update.py'); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); print(m.access_token(pathlib.Path('tok.json')))")
+rm tok.json                    # it holds a live refresh token
+
+npm run deck:extract           # src/deck/deck.json and public/deck/
+npm run deck:voice             # needs GEMINI_API_KEY; one clip per slide, src/deck/timing.json
+npm run deck:stills            # every slide's settled frame, for checking against the deck
+npm run render:deck            # out/deck.mp4
+```
+
+The voice is the speaker notes read by Gemini's speech model, the film's
+voice. To use the talk recording instead, set `track` in
+`src/deck/timing.json` to the recording's path under `public/` and give each
+slide's `frames` from the slide changes in the recording; the slides
+themselves do not change.
 
 ## License
 
