@@ -30,7 +30,12 @@ test("the deck video lasts as long as its slides' timing", () => {
   assert.equal(comps.Deck.durationInFrames, expected);
 });
 
-for (const id of ["Film", "FilmSilent", "Deck", "scene-sayno", "slide-02", "slide-32"]) {
+test("the architecture video lasts as long as its stops' timing", () => {
+  const expected = read("src/architecture/timing.json").stops.reduce((n, s) => n + s.frames, 0);
+  assert.equal(comps.Architecture.durationInFrames, expected);
+});
+
+for (const id of ["Film", "FilmSilent", "Deck", "Architecture", "scene-sayno", "slide-02", "slide-32"]) {
   test(`${id} renders a real frame`, async () => {
     const c = comps[id];
     assert.ok(c, `${id} is not registered`);

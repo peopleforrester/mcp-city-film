@@ -14,6 +14,9 @@ ABOUTME: Both say what the deck says; the deck is the source of every claim.
   extractor, for every slide at once.
 - `npm run dev` opens Remotion Studio; `npx remotion render src/index.ts Film out/film.mp4`
   renders the narrated film and `FilmSilent` the captions-only cut; `scene-<id>` compositions render one scene.
+- The architecture video (`src/architecture/`) shows the site's own diagram and says
+  what the site says about each box. Change the words in `src/architecture/tour.json`,
+  not in the component, and re-voice; move the diagram with `SITE_COMMIT`.
 - `npm run render:deck` renders the deck video; `slide-NN` compositions render one slide,
   and `npm run deck:stills` writes every slide's settled frame to `out/deck-stills/` for a
   side-by-side check against the deck's PDF export.

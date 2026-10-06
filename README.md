@@ -1,6 +1,6 @@
-# The shadow-play film and the deck video
+# The shadow-play film, the deck video and the architecture video
 
-Two videos of one keynote. The film is a cartoon walkthrough of **Governing MCP for a Workforce the Size of a City**,
+Three videos of one keynote. The film is a cartoon walkthrough of **Governing MCP for a Workforce the Size of a City**,
 the keynote at MCP Dev Summit Toronto on 6 October 2026, as a shadow play:
 cut-paper silhouettes on a backlit screen, the deck's own art, the site's
 ideas, and the talk's words as captions. The deck video is the talk itself:
@@ -21,6 +21,22 @@ npx remotion render src/index.ts Film out/film.mp4  # the narrated film
 npx remotion render src/index.ts FilmSilent out/film-silent.mp4  # the captions-only cut
 npx remotion still src/index.ts scene-gates out/gates.jpg --frame=200
 ```
+
+## The architecture video
+
+A walk through the architecture diagram on the talk site, box by box in the
+order a request travels. The picture is the site's own diagram; the words
+are the site's own description of each box.
+
+```bash
+npm run architecture:extract   # the site's diagram and box geometry at a pinned commit (SITE_COMMIT)
+npm run architecture:voice     # needs GEMINI_API_KEY; one clip per stop, src/architecture/timing.json
+npm run render:architecture    # out/architecture.mp4
+npm run architecture:captions  # out/architecture.en.vtt, closed captions for the site's player
+```
+
+The tour itself, which boxes each stop shows and what it says, is
+`src/architecture/tour.json`.
 
 ## Test it
 

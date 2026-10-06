@@ -45,3 +45,22 @@ test("every image the deck draws is on disk", () => {
     for (const e of s.elements) if (e.kind === "image") assert.ok(exists(e.src), `slide ${s.number}: missing ${e.src}`);
   }
 });
+
+test("every box the architecture tour names is in the diagram", () => {
+  const diagram = read("src/architecture/diagram.json");
+  for (const [i, s] of read("src/architecture/tour.json").stops.entries()) {
+    for (const f of s.focus) assert.ok(f === "ALL" || diagram.nodes[f] || diagram.zones[f], `stop ${i}: ${f} is not in the diagram`);
+  }
+  assert.ok(exists("architecture/architecture.png"), "missing the diagram image");
+});
+
+test("every architecture stop has a clip voiced from its current text", () => {
+  const stops = read("src/architecture/tour.json").stops;
+  const timing = read("src/architecture/timing.json");
+  assert.equal(timing.stops.length, stops.length, "timing and tour have different stop counts");
+  stops.forEach((s, i) => {
+    const clip = timing.stops[i].clip;
+    assert.ok(exists(clip), `stop ${i}: missing ${clip}`);
+    assert.ok(clip.includes(createHash("sha1").update(s.text).digest("hex").slice(0, 8)), `stop ${i}: text changed since the clip was voiced; run npm run architecture:voice`);
+  });
+});

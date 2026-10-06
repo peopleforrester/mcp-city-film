@@ -1,0 +1,28 @@
+{
+ "source": "Box descriptions from src/data/city.ts and edge labels from public/architecture/architecture.mmd in peopleforrester/mcp-city at the diagram's pinned commit; the opening and closing lines are the architecture page's own.",
+ "stops": [
+  { "focus": ["ALL"], "text": "The architecture. A person, a device, an agent, one gate every call goes through, and the tools. Four zones: the managed device, tool traffic through the tool gateway, model traffic through the model gateway, and the control plane of identity, registry, audit and device policy." },
+  { "focus": ["DEV"], "text": "Start on the managed device." },
+  { "focus": ["U"], "text": "The end user. Everything starts with a question they ask an agent." },
+  { "focus": ["A"], "text": "The AI application, the agent. It is the MCP client. It asks the model for a plan and calls tools through the proxy." },
+  { "focus": ["CP"], "text": "Client policy: which MCP servers the client may load. The allow list, fed from the registry." },
+  { "focus": ["OSP"], "text": "OS and app policy. Device policy that closes the side doors: Outlook's automation guard set to deny, and the browser's remote debugging off." },
+  { "focus": ["A", "P"], "text": "When the agent makes a tools call, it goes to the MCP proxy. How does the request reach the server? Routing, transport bridging, the first hop off the device." },
+  { "focus": ["G"], "text": "Then the MCP gateway. Should this caller be allowed? Identity, authorization, policy and rate limits, enforced once instead of per server." },
+  { "focus": ["API"], "text": "The service boundary. Can traffic reach this backend? The network edge in front of the server." },
+  { "focus": ["SRV"], "text": "The MCP server. Wrapped where needed, holding an exchanged token, never the user's." },
+  { "focus": ["T"], "text": "And the tool or enterprise data: the thing the tool call actually touches." },
+  { "focus": ["G", "V"], "text": "One branch off the gateway: a third-party hosted MCP server. A vendor's server, where its own agent acts under the user's own grant, which your gateway never issued." },
+  { "focus": ["A", "AG"], "text": "Model traffic takes its own road. The agent's prompt goes to the AI gateway. Which model, which provider? Quotas and guardrails on the inference path." },
+  { "focus": ["LLM"], "text": "Behind it, the LLM providers." },
+  { "focus": ["CTRL"], "text": "The control plane feeds all of it." },
+  { "focus": ["R"], "text": "The MCP registry: what exists, and who owns it. It is the source of the client's allow list and the gateway's routing table." },
+  { "focus": ["MR"], "text": "The model registry: which models are approved, fed to the AI gateway." },
+  { "focus": ["IDP"], "text": "The identity provider: OIDC, OAuth, ID-JAG. Single sign-on for the agent, and token validation for the gateway." },
+  { "focus": ["WI"], "text": "Workload identity: which agent is calling, so the gateway knows the workload and not just the user." },
+  { "focus": ["GIT"], "text": "GitOps and admission control. No unsanctioned server lands. Servers are deployed from the control plane, not by hand." },
+  { "focus": ["OBS"], "text": "Audit and traces. The gateway and the AI gateway send their audit logs here, and the client its traces, every call joined by traceparent." },
+  { "focus": ["A", "OUT", "TM"], "text": "And the two red dashed lines. Outlook, reached by a script the agent wrote against the mail client's own automation interface. Teams, reached through the approved browser in remote-debugging mode. Both when the gate said no. Neither touches the gateway, and the audit log stays dark along both." },
+  { "focus": ["ALL"], "text": "A person, a device, an agent, one gate every call goes through, and the tools. Everything else is that gate done properly." }
+ ]
+}
