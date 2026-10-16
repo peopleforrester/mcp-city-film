@@ -25,5 +25,5 @@ ABOUTME: Both say what the deck says; the deck is the source of every claim.
   `scripts/deck-model.mjs` so it can be tested without rendering.
 - Work on `staging`; promote to `main` once a render has been watched.
 
-Test command: `npm run lint && npm test`
-E2E command: `npm run test:e2e`
+Test command: `npm ci && npm run lint && npm test`
+E2E command: `npm ci && npm run test:e2e`
