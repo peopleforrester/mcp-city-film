@@ -24,3 +24,6 @@ ABOUTME: Both say what the deck says; the deck is the source of every claim.
   before a push. Pure logic lives in `src/beats.ts`, `src/deck/signature.ts` and
   `scripts/deck-model.mjs` so it can be tested without rendering.
 - Work on `staging`; promote to `main` once a render has been watched.
+
+Test command: `npm ci && npm run lint && npm test`
+E2E command: `npm ci && npm run test:e2e`
