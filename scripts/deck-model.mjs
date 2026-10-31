@@ -1,4 +1,4 @@
-// ABOUTME: The rules that turn Slides API JSON into deck.json: EMU to pixels, colors, fills, text runs, placeholder inheritance.
+// ABOUTME: The rules that turn Slides API JSON into deck.json: EMU to pixels, colors, fills, text runs, placeholder inheritance, layout names.
 // ABOUTME: Pure functions over one presentation, so each rule can be tested without the API.
 
 /** Builds the converters for one presentation; geometry comes out in pixels on a 1920-wide page. */
@@ -104,5 +104,15 @@ export function createDeckModel(pres) {
     return `#${mix(1)}${mix(3)}${mix(5)}`;
   }
 
-  return { W, H, K, PT, color, solid, len, box, inherited, textRuns, background };
+  const layouts = new Map(pres.layouts.map((l) => [l.objectId, l]));
+
+  /** The name the deck shows for the layout a slide is built on, such as "Title and body". */
+  function layoutName(slide) {
+    const id = slide.slideProperties?.layoutObjectId;
+    const name = layouts.get(id)?.layoutProperties?.displayName;
+    if (!name) throw new Error(`${slide.objectId}: layout ${id} has no name`);
+    return name;
+  }
+
+  return { W, H, K, PT, color, solid, len, box, inherited, textRuns, background, layoutName };
 }

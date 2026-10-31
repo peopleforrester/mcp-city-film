@@ -8,4 +8,4 @@ export type Shape = Base & { kind: "shape"; shape: string; fill: { color: string
 export type Picture = Base & { kind: "image"; src: string; crop: { l: number; r: number; t: number; b: number } };
 export type Line = Base & { kind: "line"; stroke: { color: string; alpha: number } | null; weight: number; dash: string; arrow: string };
 export type Element = Shape | Picture | Line;
-export type SlideData = { id: string; number: number; background: string; notes: string; elements: Element[] };
+export type SlideData = { id: string; number: number; layout: string; background: string; notes: string; elements: Element[] };

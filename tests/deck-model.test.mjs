@@ -14,6 +14,7 @@ const pres = {
   }],
   layouts: [{
     objectId: "l",
+    layoutProperties: { masterObjectId: "m", name: "TITLE_AND_BODY", displayName: "Title and body" },
     pageElements: [{ objectId: "lt", shape: { placeholder: { type: "TITLE", parentObjectId: "mt" }, shapeProperties: { contentAlignment: "MIDDLE" }, text: { textElements: [{ textRun: { content: "x", style: { fontSize: { magnitude: 24, unit: "PT" }, fontFamily: "Red Hat Display", foregroundColor: { opaqueColor: { themeColor: "LIGHT1" } } } } }] } } }],
   }],
 };
@@ -68,4 +69,12 @@ test("a run's own style overrides what it inherits", () => {
 test("a bullet paragraph keeps its glyph", () => {
   const [p] = m.textRuns({ textElements: [{ paragraphMarker: { style: {}, bullet: { glyph: "●" } } }, { textRun: { content: "point\n", style: {} } }] });
   assert.equal(p.bullet, "●");
+});
+
+test("a slide names the layout it is built on, by the name the deck shows", () => {
+  assert.equal(m.layoutName({ objectId: "s1", slideProperties: { layoutObjectId: "l" } }), "Title and body");
+});
+
+test("a slide whose layout is not in the deck fails rather than going unnamed", () => {
+  assert.throws(() => m.layoutName({ objectId: "s2", slideProperties: { layoutObjectId: "gone" } }), /s2: layout gone has no name/);
 });

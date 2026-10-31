@@ -12,7 +12,7 @@ const res = await fetch(`https://slides.googleapis.com/v1/presentations/${DECK}`
 if (!res.ok) throw new Error(`presentation: ${res.status} ${await res.text()}`);
 const pres = await res.json();
 
-const { solid, len, box, inherited, textRuns, background, W, H, PT } = createDeckModel(pres);
+const { solid, len, box, inherited, textRuns, background, layoutName, W, H, PT } = createDeckModel(pres);
 const master = pres.masters[0];
 
 mkdirSync(new URL("../public/deck/", import.meta.url), { recursive: true });
@@ -76,7 +76,7 @@ for (const [i, s] of live.entries()) {
   // Layout decoration (logos, bars) sits behind the slide; layout placeholders are only prompts and never render.
   for (const e of layout?.pageElements ?? []) if (!e.shape?.placeholder) els.push(await element(e, "layout"));
   for (const e of s.pageElements ?? []) els.push(await element(e, "slide"));
-  slides.push({ id: s.objectId, number: i + 1, background: background(s) ?? background(layout) ?? background(master) ?? "#ffffff", notes: notesOf(s), elements: els.filter(Boolean) });
+  slides.push({ id: s.objectId, number: i + 1, layout: layoutName(s), background: background(s) ?? background(layout) ?? background(master) ?? "#ffffff", notes: notesOf(s), elements: els.filter(Boolean) });
   process.stdout.write(`\rslide ${i + 1}/${live.length}`);
 }
 process.stdout.write("\n");
