@@ -27,3 +27,16 @@ ABOUTME: Both say what the deck says; the deck is the source of every claim.
 
 Test command: `npm ci && npm run lint && npm test`
 E2E command: `npm ci && npm run test:e2e`
+
+## Where things live
+
+- `talks/talks-knowledge` (`peopleforrester/talks-knowledge`): source of truth for the
+  talks. The register is `talks/register.md` (row 7 is this talk); the abstracts and
+  talk scripts are under `abstracts/`. Where this repo and talks-knowledge disagree,
+  talks-knowledge wins.
+- `conferences/conference-knowledge`: event state, meaning dates, CFPs, acceptances and
+  the speaking record.
+- `talks/MCP_for_a_city` (private): the talk's working repo, with the deck, script,
+  recording and research. `talks/mcp-for-a-city` holds the published collateral and the
+  sources for every number; `mrf/mcp-city` is the site.
+- Requests to another repo go into that repo's issues, labeled `agent-task`.
