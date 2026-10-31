@@ -1,6 +1,7 @@
 // ABOUTME: End-to-end test: bundles the project, checks every composition's length against its timing, and renders real stills.
 // ABOUTME: Slow (about a minute); run with npm run test:e2e.
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync } from "node:fs";
 import { after, before, test } from "node:test";
 import { bundle } from "@remotion/bundler";
@@ -29,6 +30,13 @@ test("the narrated film lasts as long as its timing, less the crossfades", () =>
 test("the deck video lasts as long as its slides' timing", () => {
   const expected = read("src/deck/timing.json").slides.reduce((n, s) => n + s.frames, 0);
   assert.equal(comps.Deck.durationInFrames, expected);
+});
+
+test("the deck video's recording is as long as its cues say", () => {
+  const cues = read("src/deck/cues.json");
+  const path = new URL(`../../public/${cues.track}`, import.meta.url).pathname;
+  const length = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]).toString());
+  assert.ok(Math.abs(length - cues.end) < 0.05, `${cues.track} is ${length} s, cues.json says ${cues.end} s`);
 });
 
 test("the architecture video lasts as long as its stops' timing", () => {

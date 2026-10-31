@@ -2,7 +2,7 @@
 // ABOUTME: Each case is a defect found against the real deck: omitted zero scales, transparent layouts, inherited title styles.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createDeckModel } from "../scripts/deck-model.mjs";
+import { createDeckModel, framesFromCues } from "../scripts/deck-model.mjs";
 
 const EMU_W = 9144000;
 const pres = {
@@ -77,4 +77,17 @@ test("a slide names the layout it is built on, by the name the deck shows", () =
 
 test("a slide whose layout is not in the deck fails rather than going unnamed", () => {
   assert.throws(() => m.layoutName({ objectId: "s2", slideProperties: { layoutObjectId: "gone" } }), /s2: layout gone has no name/);
+});
+
+test("slide cues on a recording become frames that add up to the recording", () => {
+  assert.deepEqual(framesFromCues([0, 1.5, 4.02], 10, 30), [45, 76, 179]);
+  assert.equal(framesFromCues([0, 61.3, 125.77], 963.34, 30).reduce((a, b) => a + b), Math.ceil(963.34 * 30));
+});
+
+test("slide cues that do not start at zero, go backwards, or overrun the recording are refused", () => {
+  assert.throws(() => framesFromCues([1, 2], 10, 30), /first slide must start at 0/);
+  assert.throws(() => framesFromCues([0, 5, 5], 10, 30), /slide 3 starts at 5, not after slide 2/);
+  assert.throws(() => framesFromCues([0, 5, 4], 10, 30), /slide 3 starts at 4/);
+  assert.throws(() => framesFromCues([0, 12], 10, 30), /ends at 10, before the last slide/);
+  assert.throws(() => framesFromCues([0, 1, 1.01], 10, 30), /slide 2 is up for less than a frame/);
 });

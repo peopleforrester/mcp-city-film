@@ -61,15 +61,23 @@ rm tok.json                    # it holds a live refresh token
 
 npm run deck:extract           # src/deck/deck.json and public/deck/
 npm run deck:voice             # needs GEMINI_API_KEY; one clip per slide, src/deck/timing.json
+npm run deck:cues              # the deck on the talk recording, from src/deck/cues.json
 npm run deck:stills            # every slide's settled frame, for checking against the deck
 npm run render:deck            # out/deck.mp4
 ```
 
-The voice is the speaker notes read by Gemini's speech model, the film's
-voice. To use the talk recording instead, set `track` in
-`src/deck/timing.json` to the recording's path under `public/` and give each
-slide's `frames` from the slide changes in the recording; the slides
-themselves do not change.
+The voice is the talk as given: Michael's room recording of the keynote
+(`public/deck-recording/`, 16:03, Angie Jones' introduction through the
+applause). `src/deck/cues.json` names the recording and the second each slide
+comes up in it, with the words spoken there; `npm run deck:cues` turns those
+into `track` and each slide's `frames` in `src/deck/timing.json`. To put the
+deck on another recording of the same delivery, change `track`, `end` and the
+cues in `cues.json` and run `npm run deck:cues`; the slides themselves do not
+change.
+
+The synthetic voice, the speaker notes read by Gemini's speech model, stays as
+one clip per slide in `public/deck-voice/`, refreshed by `npm run deck:voice`.
+Set `track` to `null` and run `npm run deck:voice` to render on it again.
 
 ## License
 

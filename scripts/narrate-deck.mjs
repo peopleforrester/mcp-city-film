@@ -19,5 +19,9 @@ for (const s of deck.slides) {
   process.stdout.write(`\rslide ${s.number}/${deck.slides.length}`);
 }
 process.stdout.write("\n");
-writeFileSync(new URL("../src/deck/timing.json", import.meta.url), JSON.stringify({ track: null, slides }, null, 1) + "\n");
+// Once the deck is on the talk recording, re-voicing refreshes the clips only; the slides keep the recording's frames.
+const current = JSON.parse(readFileSync(new URL("../src/deck/timing.json", import.meta.url), "utf8"));
+const track = current.track;
+if (track) console.log(`slides stay on ${track}; run npm run deck:cues after a change to src/deck/cues.json`);
+writeFileSync(new URL("../src/deck/timing.json", import.meta.url), JSON.stringify({ track, slides: track ? slides.map((s, i) => ({ ...s, frames: current.slides[i].frames })) : slides }, null, 1) + "\n");
 console.log("total", (slides.reduce((n, s) => n + s.frames, 0) / FPS / 60).toFixed(2), "min");

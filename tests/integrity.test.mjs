@@ -4,6 +4,8 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { test } from "node:test";
+import { framesFromCues } from "../scripts/deck-model.mjs";
+import { FPS } from "../scripts/speech.mjs";
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../${p}`, import.meta.url), "utf8"));
 const exists = (p) => existsSync(new URL(`../public/${p}`, import.meta.url));
@@ -38,6 +40,17 @@ test("every deck slide has notes, timing, and a clip voiced from its current not
     const hash = createHash("sha1").update(s.notes).digest("hex").slice(0, 8);
     assert.ok(clip.includes(hash), `slide ${s.number}: notes changed since the clip was voiced; run npm run deck:voice`);
   });
+});
+
+test("the deck video's track is on disk and each slide's frames come from its cue in the recording", () => {
+  const deck = read("src/deck/deck.json");
+  const cues = read("src/deck/cues.json");
+  const timing = read("src/deck/timing.json");
+  assert.equal(cues.slides.length, deck.slides.length, "cues and deck have different slide counts");
+  assert.equal(timing.track, cues.track, "timing.json is not on the recording cues.json names; run npm run deck:cues");
+  assert.ok(exists(cues.track), `missing ${cues.track}`);
+  const frames = framesFromCues(cues.slides.map((s) => s.at), cues.end, FPS);
+  assert.deepEqual(timing.slides.map((s) => s.frames), frames, "timing.json is behind cues.json; run npm run deck:cues");
 });
 
 test("every image the deck draws is on disk", () => {

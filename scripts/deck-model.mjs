@@ -116,3 +116,21 @@ export function createDeckModel(pres) {
 
   return { W, H, K, PT, color, solid, len, box, inherited, textRuns, background, layoutName };
 }
+
+/**
+ * Each slide's frames on one recording, from the second each slide comes up and the recording's length.
+ * Slide boundaries are rounded to whole frames, so the frames add up to the recording exactly.
+ */
+export function framesFromCues(starts, end, fps) {
+  if (starts[0] !== 0) throw new Error(`the first slide must start at 0, not ${starts[0]}`);
+  starts.forEach((s, i) => {
+    if (i > 0 && !(s > starts[i - 1])) throw new Error(`slide ${i + 1} starts at ${s}, not after slide ${i} at ${starts[i - 1]}`);
+  });
+  if (!(end > starts.at(-1))) throw new Error(`the recording ends at ${end}, before the last slide starts at ${starts.at(-1)}`);
+  const edges = [...starts.map((s) => Math.round(s * fps)), Math.ceil(end * fps)];
+  const frames = starts.map((_, i) => edges[i + 1] - edges[i]);
+  frames.forEach((f, i) => {
+    if (f < 1) throw new Error(`slide ${i + 1} is up for less than a frame`);
+  });
+  return frames;
+}

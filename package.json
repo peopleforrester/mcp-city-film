@@ -32,6 +32,7 @@
     "render": "remotion render src/index.ts Film out/film.mp4",
     "deck:extract": "node scripts/extract-deck.mjs",
     "deck:voice": "node scripts/narrate-deck.mjs",
+    "deck:cues": "node scripts/cue-deck.mjs",
     "deck:stills": "node scripts/stills-deck.mjs",
     "render:deck": "remotion render src/index.ts Deck out/deck.mp4",
     "test": "node --test \"tests/*.test.*\"",
