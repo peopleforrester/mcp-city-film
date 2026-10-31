@@ -7,20 +7,20 @@
   "type": "module",
   "private": true,
   "dependencies": {
-    "@remotion/cli": "4.0.532",
-    "@remotion/transitions": "^4.0.532",
+    "@remotion/cli": "4.0.539",
+    "@remotion/transitions": "^4.0.539",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "remotion": "4.0.532"
+    "remotion": "4.0.539"
   },
   "devDependencies": {
-    "@remotion/bundler": "4.0.532",
-    "@remotion/eslint-config-flat": "4.0.532",
-    "@remotion/renderer": "4.0.532",
+    "@remotion/bundler": "4.0.539",
+    "@remotion/eslint-config-flat": "4.0.539",
+    "@remotion/renderer": "4.0.539",
     "@types/node": "26.6.4",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
-    "eslint": "9.39.5",
+    "eslint": "10.14.0",
     "prettier": "3.8.1",
     "typescript": "5.9.3"
   },
@@ -40,5 +40,8 @@
     "architecture:voice": "node scripts/narrate-architecture.mjs",
     "architecture:captions": "node scripts/captions-architecture.mjs",
     "render:architecture": "remotion render src/index.ts Architecture out/architecture.mp4"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true
   }
 }
