@@ -1,7 +1,7 @@
 // ABOUTME: End-to-end test: bundles the project, checks every composition's length against its timing, and renders real stills.
 // ABOUTME: Slow (about a minute); run with npm run test:e2e.
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, statSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync } from "node:fs";
 import { after, before, test } from "node:test";
 import { bundle } from "@remotion/bundler";
 import { getCompositions, renderStill } from "@remotion/renderer";
@@ -14,6 +14,7 @@ let dir;
 before(async () => {
   serveUrl = await bundle({ entryPoint: new URL("../../src/index.ts", import.meta.url).pathname });
   comps = Object.fromEntries((await getCompositions(serveUrl)).map((c) => [c.id, c]));
+  mkdirSync(new URL("../../out/", import.meta.url), { recursive: true });
   dir = mkdtempSync(new URL("../../out/e2e-", import.meta.url).pathname);
 });
 after(() => rmSync(dir, { recursive: true, force: true }));
