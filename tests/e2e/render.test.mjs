@@ -13,7 +13,9 @@ let comps;
 let dir;
 
 before(async () => {
-  serveUrl = await bundle({ entryPoint: new URL("../../src/index.ts", import.meta.url).pathname });
+  // No persistent cache: the test always bundles the source as it is, and webpack's cache warns
+  // where a parent of the clone cannot be read (see decisions.md, issue #18).
+  serveUrl = await bundle({ entryPoint: new URL("../../src/index.ts", import.meta.url).pathname, enableCaching: false });
   comps = Object.fromEntries((await getCompositions(serveUrl)).map((c) => [c.id, c]));
   mkdirSync(new URL("../../out/", import.meta.url), { recursive: true });
   dir = mkdtempSync(new URL("../../out/e2e-", import.meta.url).pathname);
