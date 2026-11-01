@@ -12,6 +12,24 @@ Remotion.
 - The collateral: https://github.com/peopleforrester/mcp-for-a-city
 - The site's source: https://github.com/peopleforrester/mcp-city
 
+## The talk
+
+**Governing MCP for a Workforce the Size of a City**, a 15-minute keynote by
+Michael Rishi Forrester, delivered at MCP Dev Summit Toronto on 6 October 2026.
+It argues that each layer of the MCP ecosystem assigns server vetting to the
+next layer down, and the enterprise is last; and it says what governance at the
+scale of a city-sized workforce has to look like.
+
+Status: the talk is delivered. The film and the deck video are released as
+v0.5 and on `main`; the architecture video is released as v0.6 on `staging`,
+and moves to `main` once it has been watched. The deck video on the talk's room
+recording (PRD 3, milestone M4) is built on `staging` and ships as a release once a
+full render has been watched. `PROJECT_STATE.md` has the detail.
+
+Built from the deck (Google Slides, through the Slides API), the talk's
+working repo `MCP_for_a_city` (private: the deck, script and recording),
+the collateral in `mcp-for-a-city`, and the site in `mcp-city`.
+
 ## Run it
 
 ```bash
