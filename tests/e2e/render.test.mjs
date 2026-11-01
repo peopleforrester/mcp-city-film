@@ -11,16 +11,39 @@ const read = (p) => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.ur
 let serveUrl;
 let comps;
 let dir;
+let stderr = "";
+
+// Runs fn and keeps a copy of what it writes to stderr, where webpack logs, still printing it.
+// Not stdout: under node --test that carries the runner's own reports.
+const recordingStderr = async (fn) => {
+  const write = process.stderr.write;
+  process.stderr.write = function (chunk, ...rest) {
+    stderr += String(chunk);
+    return write.call(this, chunk, ...rest);
+  };
+  try {
+    return await fn();
+  } finally {
+    process.stderr.write = write;
+  }
+};
 
 before(async () => {
   // No persistent cache: the test always bundles the source as it is, and webpack's cache warns
   // where a parent of the clone cannot be read (see decisions.md, issue #18).
-  serveUrl = await bundle({ entryPoint: new URL("../../src/index.ts", import.meta.url).pathname, enableCaching: false });
+  serveUrl = await recordingStderr(() => bundle({ entryPoint: new URL("../../src/index.ts", import.meta.url).pathname, enableCaching: false }));
   comps = Object.fromEntries((await getCompositions(serveUrl)).map((c) => [c.id, c]));
   mkdirSync(new URL("../../out/", import.meta.url), { recursive: true });
   dir = mkdtempSync(new URL("../../out/e2e-", import.meta.url).pathname);
 });
 after(() => rmSync(dir, { recursive: true, force: true }));
+
+test("bundling prints no webpack warning", () => {
+  // Webpack's logger marks a warning "<w>" and an error "<e>". Issue #18 was such a cache warning,
+  // "<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack", with every other test green.
+  const flagged = stderr.split("\n").filter((line) => /<[we]> /.test(line));
+  assert.deepEqual(flagged, [], "the bundle printed a webpack warning");
+});
 
 test("the narrated film lasts as long as its timing, less the crossfades", () => {
   const timing = read("src/timing.json");
