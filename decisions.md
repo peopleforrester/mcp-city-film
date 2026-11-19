@@ -71,3 +71,17 @@ Dependabot alert 5 (medium, GHSA-g3hv-75wg-m249, a denial of service through glo
 - This reverses the #10 entry's choice to wait for upstream instead of an override, for this package only. The override crosses a major version, so it was checked: typescript-estree calls only the named `minimatch(path, pattern, { dot: true })` export, for `allowDefaultProject`, which 11 still exports with the same signature, and `npm run lint` passes with no warnings. Drop the override once a typescript-eslint release asks for `minimatch` 11 itself.
 - Held by `tests/dependencies.test.mjs`, which fails if any `minimatch` in `package-lock.json` is below 11.0.1; on the old lockfile it fails on 10.2.6.
 - Checked: `npm install` prints no warnings and `found 0 vulnerabilities`; `npm ls minimatch` shows 11.0.8 under eslint, config-array and typescript-estree. The full test and e2e commands are left to the gate's validation run.
+
+## 2026-11-19 · question 1015 · no permission request for the foundation's section (issue 17)
+
+Question 1015 asked whether the unsent 2026-10-29 draft to Jillian Hall at the Linux Foundation should also ask permission to use the keynote's audio from the foundation's recording in the public mcp-city-film repo (peopleforrester/mcp-city-film) and its release videos. Issue 17 in that repo swaps the deck video's room recording for the foundation's recording.
+- Answer: no. Use the foundation's section without asking permission, with full attribution. An embed or link with timestamps to the foundation's original video is enough.
+- Decided by Michael.
+- Changes: the draft is not extended with a question about the repo or its releases, and no permission request is needed before release use of the foundation's section. A release that uses the foundation's audio must credit the Agentic AI Foundation and link to its original YouTube video, a8p-Pz1k5l0, with timestamps for the talk (46:46 to 1:01:57). This is the fourth acceptance criterion of issue 17. Whether the draft's three questions are sent is not decided here.
+
+## 2026-11-19 · question 1252 · route for the foundation's audio (issue 17): held, not asked
+
+Question 1252 asked whether the deck video should get the Agentic AI Foundation's audio by asking the foundation for its session file or by downloading the livestream from YouTube (a8p-Pz1k5l0).
+- Answer: not asked. peopleforrester/mcp-city-film is held. The hold cites the operator's 2026-11-17 priority that the Zurich talk is the only priority until its delivery on 2026-11-20. Nothing more is done on the repo until that changes, and a later run asks again if the question still needs answering.
+- Decided by hecaton's standing rule hecaton#289 under Michael's standing rules, not by Michael.
+- Changes: no route is chosen, so nothing is requested from the foundation and nothing is downloaded from YouTube. `src/deck/cues.json` still names `deck-recording/2026-10-06-keynote-room.mp3`, and `public/deck-recording/` still holds only that file. Issue 17's criteria (the file and its length, the offset and `npm run deck:cues`, the re-render with a watched render, and the release credits) stay open until the hold changes and a route is chosen.
