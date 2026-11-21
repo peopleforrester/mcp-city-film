@@ -135,6 +135,44 @@ export function framesFromCues(starts, end, fps) {
   return frames;
 }
 
+// MPEG Layer III tables, keyed by the header's two version bits: 3 is MPEG-1, 2 is MPEG-2, 0 is MPEG-2.5.
+const RATES = { 3: [44100, 48000, 32000], 2: [22050, 24000, 16000], 0: [11025, 12000, 8000] };
+const KBPS_V1 = [0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320];
+const KBPS_V2 = [0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160];
+
+/**
+ * An MP3's length in seconds, from its bytes: the samples in every Layer III frame after the ID3v2 tag, as ffprobe counts them.
+ * A Xing or Info frame at the start describes the file and holds no audio, so it is not counted.
+ * Bytes that are not MPEG Layer III frames, such as text before the tag, are refused rather than skipped.
+ */
+export function mp3Seconds(bytes) {
+  const text = (at, n) => String.fromCharCode(...bytes.subarray(at, at + n));
+  let i = 0;
+  if (text(0, 3) === "ID3") i = 10 + ((bytes[6] << 21) | (bytes[7] << 14) | (bytes[8] << 7) | bytes[9]) + (bytes[5] & 0x10 ? 10 : 0);
+  let samples = 0;
+  let rate = 0;
+  for (let first = true; i < bytes.length; first = false) {
+    if (bytes.length - i === 128 && text(i, 3) === "TAG") break; // an ID3v1 tag closes the file
+    if (bytes.length - i < 4 || bytes[i] !== 0xff || (bytes[i + 1] & 0xe0) !== 0xe0) throw new Error(`no MPEG audio frame at byte ${i}`);
+    const version = (bytes[i + 1] >> 3) & 3;
+    const layer3 = ((bytes[i + 1] >> 1) & 3) === 1;
+    const kbps = (version === 3 ? KBPS_V1 : KBPS_V2)[bytes[i + 2] >> 4];
+    const r = RATES[version]?.[(bytes[i + 2] >> 2) & 3];
+    if (!layer3 || !kbps || !r) throw new Error(`the frame at byte ${i} is not an MPEG Layer III frame this reads`);
+    if (rate && r !== rate) throw new Error(`the sample rate changes from ${rate} to ${r} Hz at byte ${i}`);
+    rate = r;
+    const perFrame = version === 3 ? 1152 : 576;
+    if (first) {
+      const mono = bytes[i + 3] >> 6 === 3;
+      const side = 4 + (bytes[i + 1] & 1 ? 0 : 2) + (version === 3 ? (mono ? 17 : 32) : mono ? 9 : 17);
+      if (!["Xing", "Info"].includes(text(i + side, 4))) samples += perFrame;
+    } else samples += perFrame;
+    i += Math.floor(((perFrame / 8) * kbps * 1000) / r) + ((bytes[i + 2] >> 1) & 1);
+  }
+  if (!rate) throw new Error("no MPEG audio frames");
+  return samples / rate;
+}
+
 /**
  * The one shift, in seconds, that moves every cue after the title slide from one recording of the delivery onto another.
  * Both lists are `{ at, says }` on the cues' 0.01 s grid; the title slide stays at 0 on both, because each recording starts it.

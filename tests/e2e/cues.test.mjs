@@ -1,4 +1,4 @@
-// ABOUTME: End-to-end test of npm run deck:cues' inputs: measures both talk recordings with ffprobe, as the script does.
+// ABOUTME: End-to-end test of npm run deck:cues' inputs: measures both talk recordings with ffprobe, which the script's own measure matches.
 // ABOUTME: Needs ffprobe on PATH; fails if the files on disk no longer match the cues or timing.json is not what the script writes.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";

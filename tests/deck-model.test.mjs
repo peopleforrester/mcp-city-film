@@ -2,7 +2,7 @@
 // ABOUTME: Each case is a defect found against the real deck: omitted zero scales, transparent layouts, inherited title styles.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createDeckModel, cueOffset, framesFromCues, timingFromCues } from "../scripts/deck-model.mjs";
+import { createDeckModel, cueOffset, framesFromCues, mp3Seconds, timingFromCues } from "../scripts/deck-model.mjs";
 
 const EMU_W = 9144000;
 const pres = {
@@ -90,6 +90,39 @@ test("slide cues that do not start at zero, go backwards, or overrun the recordi
   assert.throws(() => framesFromCues([0, 5, 4], 10, 30), /slide 3 starts at 4/);
   assert.throws(() => framesFromCues([0, 12], 10, 30), /ends at 10, before the last slide/);
   assert.throws(() => framesFromCues([0, 1, 1.01], 10, 30), /slide 2 is up for less than a frame/);
+});
+
+// One MPEG-1 Layer III frame: 128 kb/s, 48 kHz, mono, 384 bytes; `tag` writes a Xing or Info header where its side info starts.
+const frame = (tag) => {
+  const f = new Uint8Array(384);
+  f.set([0xff, 0xfb, 0x94, 0xc4]);
+  if (tag) f.set([...tag].map((c) => c.charCodeAt(0)), 21);
+  return f;
+};
+const bytes = (...parts) => {
+  const out = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
+  parts.reduce((at, p) => (out.set(p, at), at + p.length), 0);
+  return out;
+};
+const id3 = new Uint8Array([0x49, 0x44, 0x33, 4, 0, 0, 0, 0, 0, 6, 1, 2, 3, 4, 5, 6]);
+
+test("an MP3 lasts as long as the samples in its frames, without the Info frame or the ID3 tags", () => {
+  assert.equal(mp3Seconds(bytes(frame(), frame(), frame())), (3 * 1152) / 48000);
+  assert.equal(mp3Seconds(bytes(id3, frame("Info"), frame(), frame())), (2 * 1152) / 48000);
+  assert.equal(mp3Seconds(bytes(frame("Xing"), frame(), new Uint8Array([0x54, 0x41, 0x47, ...new Array(125).fill(0)]))), 1152 / 48000);
+  const mpeg2 = new Uint8Array(192); // MPEG-2 Layer III, 64 kb/s, 24 kHz, mono: 576 samples in 192 bytes
+  mpeg2.set([0xff, 0xf3, 0x84, 0xc4]);
+  assert.equal(mp3Seconds(bytes(mpeg2, mpeg2)), (2 * 576) / 24000);
+});
+
+test("bytes that are not MP3 frames are refused rather than measured", () => {
+  const text = new TextEncoder().encode("path\t/home/x/download\nsize\t14.7 MB\n");
+  assert.throws(() => mp3Seconds(bytes(text, id3, frame())), /no MPEG audio frame at byte 0/);
+  assert.throws(() => mp3Seconds(bytes(frame(), new Uint8Array(10))), /no MPEG audio frame at byte 384/);
+  const layer2 = frame();
+  layer2[1] = 0xfd;
+  assert.throws(() => mp3Seconds(layer2), /not an MPEG Layer III frame/);
+  assert.throws(() => mp3Seconds(id3), /no MPEG audio frames/);
 });
 
 const room = [{ at: 0, says: "a" }, { at: 94.12, says: "b" }, { at: 133.56, says: "c" }];

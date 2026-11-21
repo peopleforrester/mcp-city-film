@@ -3,7 +3,9 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { basename, dirname } from "node:path";
 import { test } from "node:test";
+import { readCues } from "../scripts/deck-cues.mjs";
 import { cueOffset, framesFromCues, timingFromCues } from "../scripts/deck-model.mjs";
 import { FPS } from "../scripts/speech.mjs";
 
@@ -51,6 +53,22 @@ test("the deck video's track is on disk and each slide's frames come from its cu
   assert.ok(exists(cues.track), `missing ${cues.track}`);
   const frames = framesFromCues(cues.slides.map((s) => s.at), cues.end, FPS);
   assert.deepEqual(timing.slides.map((s) => s.frames), frames, "timing.json is behind cues.json; run npm run deck:cues");
+});
+
+test("the deck video plays the Agentic AI Foundation's recording from public/deck-recording/, and its cues end where that file does", () => {
+  const foundation = "deck-recording/2026-10-06-keynote-aaif-livestream.mp3";
+  const cues = readCues();
+  assert.equal(cues.track, foundation, "npm run deck:cues does not put the deck video on the foundation's livestream recording");
+  assert.equal(read("src/deck/timing.json").track, foundation, "the deck video does not play the foundation's recording; run npm run deck:cues");
+  assert.equal(dirname(cues.track), "deck-recording");
+  assert.ok(readdirSync(new URL("../public/deck-recording/", import.meta.url)).includes(basename(foundation)), `public/deck-recording/ has no ${basename(foundation)}`);
+  assert.ok(Math.abs(cues.seconds - cues.end) < 0.001, `${cues.track} is ${cues.seconds} s long, but the cues end at ${cues.end} s`);
+});
+
+test("npm run deck:cues refuses cues whose end is not the recording's length, or whose recording is not on disk", () => {
+  const cues = readCues();
+  assert.throws(() => readCues({ ...cues, end: cues.end - 1 }), new RegExp(`is ${cues.seconds} s long, but cues.json says it ends at ${cues.end - 1} s`));
+  assert.throws(() => readCues({ ...cues, track: "deck-recording/missing.mp3" }), /ENOENT/);
 });
 
 test("every cue on the deck video's track is the room recording's cue moved by the lead before the room edit", () => {
