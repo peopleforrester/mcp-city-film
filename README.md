@@ -96,7 +96,9 @@ comes up in it, with the words spoken there; `npm run deck:cues` turns those
 into `track` and each slide's `frames` in `src/deck/timing.json`. To put the
 deck on another recording of the same delivery, change `track`, `end` and the
 cues in `cues.json` and run `npm run deck:cues`; the slides themselves do not
-change.
+change. `src/deck/room-cues.json` keeps the cues on the room recording, the
+times the transcript uses. `npm run deck:cues` refuses cues that are not those
+cues moved by one offset, and prints the offset.
 
 The synthetic voice, the speaker notes read by Gemini's speech model, stays as
 one clip per slide in `public/deck-voice/`, refreshed by `npm run deck:voice`.

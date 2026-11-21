@@ -172,3 +172,34 @@ export function mp3Seconds(bytes) {
   if (!rate) throw new Error("no MPEG audio frames");
   return samples / rate;
 }
+
+/**
+ * The one shift, in seconds, that moves every cue after the title slide from one recording of the delivery onto another.
+ * Both lists are `{ at, says }` on the cues' 0.01 s grid; the title slide stays at 0 on both, because each recording starts it.
+ * Throws if the lists are not the same slides or if any cue moves by a different amount from slide 2's.
+ */
+export function cueOffset(from, to) {
+  if (from.length !== to.length) throw new Error(`the recordings have ${from.length} and ${to.length} cues`);
+  from.forEach((f, i) => {
+    if (f.says !== to[i].says) throw new Error(`slide ${i + 1} says "${f.says}" on one recording and "${to[i].says}" on the other`);
+  });
+  if (from[0].at !== 0 || to[0].at !== 0) throw new Error(`the title slide must start at 0 on both recordings, not ${from[0].at} and ${to[0].at}`);
+  const cs = (s) => Math.round(s * 100);
+  const shift = cs(to[1].at) - cs(from[1].at);
+  to.forEach((t, i) => {
+    const moved = cs(t.at) - cs(from[i].at);
+    if (i > 0 && moved !== shift) throw new Error(`slide ${i + 1} moves by ${moved / 100} s, not by ${shift / 100} s like slide 2`);
+  });
+  return shift / 100;
+}
+
+/**
+ * The timing.json that `npm run deck:cues` writes: the cues' track, and each slide's frames from its cue, with its clip kept.
+ * `length` is the track's measured length in seconds, which must match the cues' `end` to 0.05 s.
+ */
+export function timingFromCues(cues, timing, length, fps) {
+  if (cues.slides.length !== timing.slides.length) throw new Error(`cues.json has ${cues.slides.length} slides, timing.json ${timing.slides.length}`);
+  if (Math.abs(length - cues.end) > 0.05) throw new Error(`${cues.track} is ${length} s long, but cues.json says it ends at ${cues.end} s`);
+  const frames = framesFromCues(cues.slides.map((s) => s.at), cues.end, fps);
+  return { track: cues.track, slides: timing.slides.map((s, i) => ({ ...s, frames: frames[i] })) };
+}

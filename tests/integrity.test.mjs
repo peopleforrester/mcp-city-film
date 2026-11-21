@@ -6,7 +6,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, dirname } from "node:path";
 import { test } from "node:test";
 import { readCues } from "../scripts/deck-cues.mjs";
-import { framesFromCues } from "../scripts/deck-model.mjs";
+import { cueOffset, framesFromCues, timingFromCues } from "../scripts/deck-model.mjs";
 import { FPS } from "../scripts/speech.mjs";
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../${p}`, import.meta.url), "utf8"));
@@ -69,6 +69,23 @@ test("npm run deck:cues refuses cues whose end is not the recording's length, or
   const cues = readCues();
   assert.throws(() => readCues({ ...cues, end: cues.end - 1 }), new RegExp(`is ${cues.seconds} s long, but cues.json says it ends at ${cues.end - 1} s`));
   assert.throws(() => readCues({ ...cues, track: "deck-recording/missing.mp3" }), /ENOENT/);
+});
+
+test("every cue on the deck video's track is the room recording's cue moved by the lead before the room edit", () => {
+  const cues = read("src/deck/cues.json");
+  const room = read("src/deck/room-cues.json");
+  assert.ok(exists(room.track), `missing ${room.track}`);
+  const offset = cueOffset(room.slides, cues.slides);
+  // decisions.md, 2026-11-21: the room edit, Angie Jones' introduction, starts 7.14 s into the livestream file.
+  assert.equal(offset, 7.14, `the cues are the room's moved by ${offset} s, not the 7.14 s before the room edit starts`);
+  // The file ends where the room edit ends, so it is the room edit plus the lead before it, to within a frame.
+  assert.ok(Math.abs(cues.end - room.end - offset) < 1 / FPS, `the track is ${cues.end - room.end} s longer than the room edit, not ${offset} s`);
+});
+
+test("npm run deck:cues regenerates the timing.json in the repo from cues.json", () => {
+  const cues = read("src/deck/cues.json");
+  const timing = read("src/deck/timing.json");
+  assert.deepEqual(timingFromCues(cues, timing, cues.end, FPS), timing, "timing.json is not what npm run deck:cues writes; run it");
 });
 
 test("every deck recording is named in the README, and the foundation's audio is credited with its video and timestamps", () => {

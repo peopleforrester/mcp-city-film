@@ -1,0 +1,162 @@
+{
+ "track": "deck-recording/2026-10-06-keynote-room.mp3",
+ "end": 963.343625,
+ "slides": [
+  {
+   "at": 0,
+   "says": "All right. Imagine that you made an MCP server at work"
+  },
+  {
+   "at": 94.12,
+   "says": "But you probably have a few questions"
+  },
+  {
+   "at": 133.56,
+   "says": "So out of north of 800,000 people"
+  },
+  {
+   "at": 152.88,
+   "says": "Enterprise-D?"
+  },
+  {
+   "at": 154.56,
+   "says": "Maybe a Battlestar?"
+  },
+  {
+   "at": 156.26,
+   "says": "Maybe a Halo Infinity ship?"
+  },
+  {
+   "at": 159.4,
+   "says": "maybe it's a Star Destroyer"
+  },
+  {
+   "at": 160.6,
+   "says": "an Executor"
+  },
+  {
+   "at": 162.28,
+   "says": "or maybe, it's not the first Death Star"
+  },
+  {
+   "at": 167.16,
+   "says": "Maybe we have two-thirds of a Death Star"
+  },
+  {
+   "at": 193.78,
+   "says": "Now our architecture"
+  },
+  {
+   "at": 228.62,
+   "says": "Complex diagram looks something like this"
+  },
+  {
+   "at": 249.76,
+   "says": "Now, one thing that I thought was cool to mention"
+  },
+  {
+   "at": 335.68,
+   "says": "But I do want to tell you about an interesting security event"
+  },
+  {
+   "at": 358.2,
+   "says": "Unbeknownst to us, a hacker"
+  },
+  {
+   "at": 370.62,
+   "says": "And then one of our operators"
+  },
+  {
+   "at": 387.0,
+   "says": "And they found this little gem inside the log file"
+  },
+  {
+   "at": 420.08,
+   "says": "And basically that's what this does. There's no TLS checking"
+  },
+  {
+   "at": 427.84,
+   "says": "And what's funny is that it wasn't a security incident"
+  },
+  {
+   "at": 470.04,
+   "says": "And last but not least before I get to my lever"
+  },
+  {
+   "at": 540.76,
+   "says": "But oddly enough, I just talked about a bunch of things I didn't want to talk about"
+  },
+  {
+   "at": 587.02,
+   "says": "Well, here's a thought."
+  },
+  {
+   "at": 595.1,
+   "says": "we're going to give you an agent"
+  },
+  {
+   "at": 597.32,
+   "says": "We're going to make sure that you have the tooling"
+  },
+  {
+   "at": 605.38,
+   "says": "And then we're going to tell you, go, go gadget go"
+  },
+  {
+   "at": 625.76,
+   "says": "And then what we did is that we gave everyone a relentless hacker"
+  },
+  {
+   "at": 650.28,
+   "says": "Is anyone not getting pressure?"
+  },
+  {
+   "at": 670.3,
+   "says": "And so, when you give your users this kind of environment"
+  },
+  {
+   "at": 715.32,
+   "says": "Because these are human tools"
+  },
+  {
+   "at": 734.1,
+   "says": "So we said no."
+  },
+  {
+   "at": 735.74,
+   "says": "And then of course the user goes to their agent"
+  },
+  {
+   "at": 753.16,
+   "says": "What do you think it did?"
+  },
+  {
+   "at": 803.32,
+   "says": "But then they said, Teams, hey, how about Teams?"
+  },
+  {
+   "at": 814.4,
+   "says": "Took Edge, loaded Edge up"
+  },
+  {
+   "at": 847.28,
+   "says": "So what was the base lever?"
+  },
+  {
+   "at": 888.92,
+   "says": "Now notice we still said no."
+  },
+  {
+   "at": 914.88,
+   "says": "And so we had to run it like a product."
+  },
+  {
+   "at": 921.16,
+   "says": "So how do you govern a workforce the size of a city?"
+  },
+  {
+   "at": 945.9,
+   "says": "So, I'm Michael Forrester. Catch me at the QR codes here"
+  }
+ ]
+}
