@@ -6,7 +6,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, dirname } from "node:path";
 import { test } from "node:test";
 import { readCues } from "../scripts/deck-cues.mjs";
-import { cueOffset, framesFromCues, timingFromCues } from "../scripts/deck-model.mjs";
+import { cueOffset, framesFromCues, mp3Seconds, timingFromCues } from "../scripts/deck-model.mjs";
 import { FPS } from "../scripts/speech.mjs";
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../${p}`, import.meta.url), "utf8"));
@@ -80,6 +80,17 @@ test("every cue on the deck video's track is the room recording's cue moved by t
   assert.equal(offset, 7.14, `the cues are the room's moved by ${offset} s, not the 7.14 s before the room edit starts`);
   // The file ends where the room edit ends, so it is the room edit plus the lead before it, to within a frame.
   assert.ok(Math.abs(cues.end - room.end - offset) < 1 / FPS, `the track is ${cues.end - room.end} s longer than the room edit, not ${offset} s`);
+});
+
+test("every file in public/deck-recording/ is an MP3 that mp3Seconds can measure", () => {
+  const dir = new URL("../public/deck-recording/", import.meta.url);
+  const files = readdirSync(dir);
+  assert.ok(files.length > 0, "public/deck-recording/ is empty");
+  for (const f of files) {
+    let seconds;
+    assert.doesNotThrow(() => (seconds = mp3Seconds(readFileSync(new URL(f, dir)))), `deck-recording/${f} is not an MP3 that mp3Seconds can measure`);
+    assert.ok(seconds > 0, `deck-recording/${f} measures ${seconds} s`);
+  }
 });
 
 test("npm run deck:cues regenerates the timing.json in the repo from cues.json", () => {
