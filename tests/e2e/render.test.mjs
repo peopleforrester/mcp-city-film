@@ -6,6 +6,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, statSync } from "node:fs"
 import { after, before, test } from "node:test";
 import { bundle } from "@remotion/bundler";
 import { getCompositions, renderStill } from "@remotion/renderer";
+import { readCues } from "../../scripts/deck-cues.mjs";
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.url), "utf8"));
 let serveUrl;
@@ -57,11 +58,12 @@ test("the deck video lasts as long as its slides' timing", () => {
   assert.equal(comps.Deck.durationInFrames, expected);
 });
 
-test("the deck video's recording is as long as its cues say", () => {
-  const cues = read("src/deck/cues.json");
+test("the deck video's recording is as long as its cues say, and npm run deck:cues measures it as ffprobe does", () => {
+  const cues = readCues();
   const path = new URL(`../../public/${cues.track}`, import.meta.url).pathname;
   const length = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path]).toString());
   assert.ok(Math.abs(length - cues.end) < 0.05, `${cues.track} is ${length} s, cues.json says ${cues.end} s`);
+  assert.ok(Math.abs(length - cues.seconds) < 0.001, `npm run deck:cues reads ${cues.seconds} s from ${cues.track}, ffprobe ${length} s`);
 });
 
 test("the architecture video lasts as long as its stops' timing", () => {
