@@ -22,9 +22,10 @@ scale of a city-sized workforce has to look like.
 
 Status: the talk is delivered. The film and the deck video are released as
 v0.5 and on `main`; the architecture video is released as v0.6 on `staging`,
-and moves to `main` once it has been watched. The deck video on the talk's room
-recording (PRD 3, milestone M4) is built on `staging` and ships as a release once a
-full render has been watched. `PROJECT_STATE.md` has the detail.
+and moves to `main` once it has been watched. The deck video on the talk recording
+(PRD 3, milestone M4), now the Agentic AI Foundation's livestream audio (issue
+#17), is built on `staging` and ships as a release once a full render has been
+watched. `PROJECT_STATE.md` has the detail.
 
 Built from the deck (Google Slides, through the Slides API), the talk's
 working repo `MCP_for_a_city` (private: the deck, script and recording),
@@ -84,9 +85,13 @@ npm run deck:stills            # every slide's settled frame, for checking again
 npm run render:deck            # out/deck.mp4
 ```
 
-The voice is the talk as given: Michael's room recording of the keynote
-(`public/deck-recording/`, 16:03, Angie Jones' introduction through the
-applause). `src/deck/cues.json` names the recording and the second each slide
+The voice is the talk as given, from the Agentic AI Foundation's livestream of
+the Toronto keynotes (`public/deck-recording/2026-10-06-keynote-aaif-livestream.mp3`,
+16:10, from 45:47 to 1:01:57 of the livestream; see Credits). The file starts
+7.14 s before Angie Jones' introduction and ends after the applause. Michael's room
+recording of the same delivery (`2026-10-06-keynote-room.mp3`, 16:03, recorded
+on a phone in the ballroom) stays beside it, because the transcript's
+timestamps are on that file. `src/deck/cues.json` names the recording and the second each slide
 comes up in it, with the words spoken there; `npm run deck:cues` turns those
 into `track` and each slide's `frames` in `src/deck/timing.json`. To put the
 deck on another recording of the same delivery, change `track`, `end` and the
@@ -96,6 +101,16 @@ change.
 The synthetic voice, the speaker notes read by Gemini's speech model, stays as
 one clip per slide in `public/deck-voice/`, refreshed by `npm run deck:voice`.
 Set `track` to `null` and run `npm run deck:voice` to render on it again.
+
+## Credits
+
+The deck video's audio is from the Agentic AI Foundation's recording, "OCT 6 -
+MCP Dev Summit Toronto 2026 Livestream", on the foundation's YouTube channel:
+https://www.youtube.com/watch?v=a8p-Pz1k5l0. The talk is at 46:46 to 1:01:57
+(https://www.youtube.com/watch?v=a8p-Pz1k5l0&t=2806s), and the deck video's
+audio runs from Angie Jones' introduction just before it, 45:47 to 1:01:57.
+The audio belongs to the Agentic AI Foundation and is not covered by this
+repo's license.
 
 ## License
 

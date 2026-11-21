@@ -1,161 +1,161 @@
 {
- "track": "deck-recording/2026-10-06-keynote-room.mp3",
- "end": 963.343625,
+ "track": "deck-recording/2026-10-06-keynote-aaif-livestream.mp3",
+ "end": 970.488,
  "slides": [
   {
    "at": 0,
    "says": "All right. Imagine that you made an MCP server at work"
   },
   {
-   "at": 94.12,
+   "at": 101.26,
    "says": "But you probably have a few questions"
   },
   {
-   "at": 133.56,
+   "at": 140.7,
    "says": "So out of north of 800,000 people"
   },
   {
-   "at": 152.88,
+   "at": 160.02,
    "says": "Enterprise-D?"
   },
   {
-   "at": 154.56,
+   "at": 161.7,
    "says": "Maybe a Battlestar?"
   },
   {
-   "at": 156.26,
+   "at": 163.4,
    "says": "Maybe a Halo Infinity ship?"
   },
   {
-   "at": 159.4,
+   "at": 166.54,
    "says": "maybe it's a Star Destroyer"
   },
   {
-   "at": 160.6,
+   "at": 167.74,
    "says": "an Executor"
   },
   {
-   "at": 162.28,
+   "at": 169.42,
    "says": "or maybe, it's not the first Death Star"
   },
   {
-   "at": 167.16,
+   "at": 174.3,
    "says": "Maybe we have two-thirds of a Death Star"
   },
   {
-   "at": 193.78,
+   "at": 200.92,
    "says": "Now our architecture"
   },
   {
-   "at": 228.62,
+   "at": 235.76,
    "says": "Complex diagram looks something like this"
   },
   {
-   "at": 249.76,
+   "at": 256.9,
    "says": "Now, one thing that I thought was cool to mention"
   },
   {
-   "at": 335.68,
+   "at": 342.82,
    "says": "But I do want to tell you about an interesting security event"
   },
   {
-   "at": 358.2,
+   "at": 365.34,
    "says": "Unbeknownst to us, a hacker"
   },
   {
-   "at": 370.62,
+   "at": 377.76,
    "says": "And then one of our operators"
   },
   {
-   "at": 387.0,
+   "at": 394.14,
    "says": "And they found this little gem inside the log file"
   },
   {
-   "at": 420.08,
+   "at": 427.22,
    "says": "And basically that's what this does. There's no TLS checking"
   },
   {
-   "at": 427.84,
+   "at": 434.98,
    "says": "And what's funny is that it wasn't a security incident"
   },
   {
-   "at": 470.04,
+   "at": 477.18,
    "says": "And last but not least before I get to my lever"
   },
   {
-   "at": 540.76,
+   "at": 547.9,
    "says": "But oddly enough, I just talked about a bunch of things I didn't want to talk about"
   },
   {
-   "at": 587.02,
+   "at": 594.16,
    "says": "Well, here's a thought."
   },
   {
-   "at": 595.1,
+   "at": 602.24,
    "says": "we're going to give you an agent"
   },
   {
-   "at": 597.32,
+   "at": 604.46,
    "says": "We're going to make sure that you have the tooling"
   },
   {
-   "at": 605.38,
+   "at": 612.52,
    "says": "And then we're going to tell you, go, go gadget go"
   },
   {
-   "at": 625.76,
+   "at": 632.9,
    "says": "And then what we did is that we gave everyone a relentless hacker"
   },
   {
-   "at": 650.28,
+   "at": 657.42,
    "says": "Is anyone not getting pressure?"
   },
   {
-   "at": 670.3,
+   "at": 677.44,
    "says": "And so, when you give your users this kind of environment"
   },
   {
-   "at": 715.32,
+   "at": 722.46,
    "says": "Because these are human tools"
   },
   {
-   "at": 734.1,
+   "at": 741.24,
    "says": "So we said no."
   },
   {
-   "at": 735.74,
+   "at": 742.88,
    "says": "And then of course the user goes to their agent"
   },
   {
-   "at": 753.16,
+   "at": 760.3,
    "says": "What do you think it did?"
   },
   {
-   "at": 803.32,
+   "at": 810.46,
    "says": "But then they said, Teams, hey, how about Teams?"
   },
   {
-   "at": 814.4,
+   "at": 821.54,
    "says": "Took Edge, loaded Edge up"
   },
   {
-   "at": 847.28,
+   "at": 854.42,
    "says": "So what was the base lever?"
   },
   {
-   "at": 888.92,
+   "at": 896.06,
    "says": "Now notice we still said no."
   },
   {
-   "at": 914.88,
+   "at": 922.02,
    "says": "And so we had to run it like a product."
   },
   {
-   "at": 921.16,
+   "at": 928.3,
    "says": "So how do you govern a workforce the size of a city?"
   },
   {
-   "at": 945.9,
+   "at": 953.04,
    "says": "So, I'm Michael Forrester. Catch me at the QR codes here"
   }
  ]

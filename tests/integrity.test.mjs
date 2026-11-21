@@ -2,7 +2,7 @@
 // ABOUTME: They catch a deck re-extracted without re-voicing, a missing clip, or a scene with no timing.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { framesFromCues } from "../scripts/deck-model.mjs";
 import { FPS } from "../scripts/speech.mjs";
@@ -51,6 +51,15 @@ test("the deck video's track is on disk and each slide's frames come from its cu
   assert.ok(exists(cues.track), `missing ${cues.track}`);
   const frames = framesFromCues(cues.slides.map((s) => s.at), cues.end, FPS);
   assert.deepEqual(timing.slides.map((s) => s.frames), frames, "timing.json is behind cues.json; run npm run deck:cues");
+});
+
+test("every deck recording is named in the README, and the foundation's audio is credited with its video and timestamps", () => {
+  const readme = readFileSync(new URL("../README.md", import.meta.url), "utf8");
+  for (const f of readdirSync(new URL("../public/deck-recording/", import.meta.url))) assert.ok(readme.includes(f), `README does not name deck-recording/${f}`);
+  const credits = readme.split("## Credits")[1]?.split("\n## ")[0] ?? "";
+  assert.match(credits, /Agentic AI Foundation/, "README's Credits do not name the Agentic AI Foundation");
+  assert.match(credits, /https:\/\/www\.youtube\.com\/watch\?v=a8p-Pz1k5l0&t=2806s/, "README's Credits do not link the talk at 46:46 of a8p-Pz1k5l0");
+  assert.match(credits, /46:46 to 1:01:57/, "README's Credits do not give the talk's timestamps");
 });
 
 test("every image the deck draws is on disk", () => {
