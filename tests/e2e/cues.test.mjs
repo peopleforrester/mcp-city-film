@@ -15,6 +15,13 @@ test("npm run deck:cues, on the measured track, writes the timing.json in the re
   assert.deepEqual(timingFromCues(cues, timing, measure(cues.track), FPS), timing, "timing.json is not what npm run deck:cues writes; run it");
 });
 
+test("ffprobe reads the room recording as 963.34 s, within a frame of room-cues.json's end", () => {
+  const room = read("src/deck/room-cues.json");
+  const length = measure(room.track);
+  assert.equal(length.toFixed(2), "963.34", `ffprobe reads ${room.track} as ${length} s, not 963.34 s`);
+  assert.ok(Math.abs(length - room.end) < 1 / FPS, `ffprobe reads ${room.track} as ${length} s, more than a frame from room-cues.json's end at ${room.end} s`);
+});
+
 test("the deck video's track is the room edit with the lead before it, which every cue moves by", () => {
   const cues = read("src/deck/cues.json");
   const room = read("src/deck/room-cues.json");

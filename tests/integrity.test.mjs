@@ -93,6 +93,21 @@ test("every file in public/deck-recording/ is an MP3 that mp3Seconds can measure
   }
 });
 
+test("the room recording starts on its ID3 tag, is issue 15's file less only the stray text, and is 963.34 s long", () => {
+  const room = read("src/deck/room-cues.json");
+  const bytes = readFileSync(new URL(`../public/${room.track}`, import.meta.url));
+  assert.equal(bytes.subarray(0, 3).toString("latin1"), "ID3", `${room.track} does not start on its ID3 tag`);
+  // decisions.md, issue 25: a62c376 added the file with this tool output before the tag; sha256 7d91ff2c…3ac0 is that file.
+  const prefix = Buffer.from("path\t/home/michael/.cache/hecaton-sources/4038878/download\nsize\t14.7 MB\n", "latin1");
+  assert.equal(prefix.length, 72);
+  const before = createHash("sha256").update(Buffer.concat([prefix, bytes])).digest("hex");
+  assert.equal(before, "7d91ff2ce1f4fb86d3a8725726c268edcd1dd8e13df3f8dcd715926734e93ac0", `${room.track} is not the file a62c376 added with only its 72-byte prefix removed`);
+  // Measured the way npm run deck:cues measures a track, through readCues.
+  const { seconds } = readCues(room);
+  assert.equal(seconds.toFixed(2), "963.34", `${room.track} measures ${seconds} s, not 963.34 s`);
+  assert.ok(Math.abs(seconds - room.end) < 1 / FPS, `${room.track} measures ${seconds} s, more than a frame from room-cues.json's end at ${room.end} s`);
+});
+
 test("npm run deck:cues regenerates the timing.json in the repo from cues.json", () => {
   const cues = read("src/deck/cues.json");
   const timing = read("src/deck/timing.json");

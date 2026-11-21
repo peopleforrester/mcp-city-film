@@ -140,3 +140,8 @@ The first hand-up of release v0.7 was refused by the elevated tier because no ru
 - This run is on a lane host (tanjiro-debian). It has no `sources-elevated` wrapper (`/var/lib/hecaton/cli/sources-elevated` does not exist), and its `gh` and `gog` have no login, so the wrapper could not be tried here and gave no `REFUSED` line. Nothing was published.
 - Checked by GitHub's public API: v0.7 is not cut (the latest release is v0.6), and the target, f072e07, is on GitHub. f072e07 is the commit the watched render was made from.
 - Handed up as two separate commands, not one combined act: `gog drive download` of the Drive review render (file id `1qO5ZdrE0O2-Uiqo1wR1jrQsfkprwxVRM`) to `deck.mp4`, then `gh release create v0.7` on f072e07 with that file, the title from `releases/next.md`, and its body (without the ABOUTME comments) as the notes. Issue 17's fourth criterion stays open until the release is cut.
+
+## 2026-11-21 · issue 26 · a test that the room recording lost only its prefix
+
+- `tests/integrity.test.mjs` checks that the room recording starts with `ID3`, and that putting the 72-byte prefix back gives sha256 `7d91ff2c…3ac0`, the hash of the file a62c376 added. That proves the only change was removing the prefix. It also measures the file through `readCues(room-cues.json)`, the way `deck:cues` measures a track, and asks for 963.34 s, within a frame of `room-cues.json`'s `end`. It failed on a62c376's file, and on a file that starts with `ID3` but is cut short.
+- `tests/e2e/cues.test.mjs` asks ffprobe for the same 963.34 s. That test sits in the e2e suite because it needs ffprobe on PATH.
