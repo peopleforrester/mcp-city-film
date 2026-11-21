@@ -2,7 +2,7 @@
 // ABOUTME: Each case is a defect found against the real deck: omitted zero scales, transparent layouts, inherited title styles.
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { createDeckModel, framesFromCues } from "../scripts/deck-model.mjs";
+import { createDeckModel, cueOffset, framesFromCues, timingFromCues } from "../scripts/deck-model.mjs";
 
 const EMU_W = 9144000;
 const pres = {
@@ -90,4 +90,32 @@ test("slide cues that do not start at zero, go backwards, or overrun the recordi
   assert.throws(() => framesFromCues([0, 5, 4], 10, 30), /slide 3 starts at 4/);
   assert.throws(() => framesFromCues([0, 12], 10, 30), /ends at 10, before the last slide/);
   assert.throws(() => framesFromCues([0, 1, 1.01], 10, 30), /slide 2 is up for less than a frame/);
+});
+
+const room = [{ at: 0, says: "a" }, { at: 94.12, says: "b" }, { at: 133.56, says: "c" }];
+const moved = (by) => room.map((c, i) => ({ ...c, at: i ? Math.round((c.at + by) * 100) / 100 : 0 }));
+
+test("cues moved together onto another recording give back their one offset", () => {
+  assert.equal(cueOffset(room, moved(7.14)), 7.14);
+  assert.equal(cueOffset(room, room), 0);
+});
+
+test("cues that do not all move by one offset, or are not the same slides, are refused", () => {
+  const off = moved(7.14);
+  off[2] = { ...off[2], at: 140.71 };
+  assert.throws(() => cueOffset(room, off), /slide 3 moves by 7.15 s, not by 7.14 s like slide 2/);
+  assert.throws(() => cueOffset(room, moved(7.14).slice(1)), /have 3 and 2 cues/);
+  assert.throws(() => cueOffset(room, moved(7.14).map((c, i) => (i === 1 ? { ...c, says: "x" } : c))), /slide 2 says "b" on one recording and "x"/);
+  assert.throws(() => cueOffset(room, moved(7.14).map((c, i) => (i === 0 ? { ...c, at: 7.14 } : c))), /title slide must start at 0/);
+});
+
+test("deck:cues' timing puts each slide's frames on the cues' track and keeps its clip", () => {
+  const cues = { track: "rec.mp3", end: 10, slides: [{ at: 0 }, { at: 1.5 }, { at: 4.02 }] };
+  const timing = { track: "old.mp3", slides: [{ frames: 1, clip: "a.mp3" }, { frames: 1, clip: "b.mp3" }, { frames: 1, clip: "c.mp3" }] };
+  assert.deepEqual(timingFromCues(cues, timing, 10.02, 30), {
+    track: "rec.mp3",
+    slides: [{ frames: 45, clip: "a.mp3" }, { frames: 76, clip: "b.mp3" }, { frames: 179, clip: "c.mp3" }],
+  });
+  assert.throws(() => timingFromCues(cues, timing, 10.1, 30), /rec.mp3 is 10.1 s long, but cues.json says it ends at 10 s/);
+  assert.throws(() => timingFromCues(cues, { slides: timing.slides.slice(1) }, 10, 30), /cues.json has 3 slides, timing.json 2/);
 });
