@@ -24,8 +24,8 @@ Status: the talk is delivered. The film and the deck video are released as
 v0.5 and on `main`; the architecture video is released as v0.6 on `staging`,
 and moves to `main` once it has been watched. The deck video on the talk recording
 (PRD 3, milestone M4), now the Agentic AI Foundation's livestream audio (issue
-#17), is built on `staging` and ships as a release once a full render has been
-watched. `PROJECT_STATE.md` has the detail.
+#17), is built on `staging`. Its render was watched on 2026-11-21, and it ships as
+release v0.7. `PROJECT_STATE.md` has the detail.
 
 Built from the deck (Google Slides, through the Slides API), the talk's
 working repo `MCP_for_a_city` (private: the deck, script and recording),

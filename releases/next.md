@@ -1,6 +1,6 @@
-<!-- ABOUTME: Draft body for the next release, the deck video on the Agentic AI Foundation's audio (issue 17). -->
-<!-- ABOUTME: Cut the release from it only after a full render has been watched (AGENTS.md); keep the Credits as they are. -->
-# The deck video on the talk as given (draft, not released)
+<!-- ABOUTME: Body for release v0.7, the deck video on the Agentic AI Foundation's audio (issue 17). -->
+<!-- ABOUTME: Its render was watched on 2026-11-21 (decisions.md); keep the Credits as they are when the release is cut. -->
+# v0.7: the deck video on the talk as given
 
 The deck video now plays the keynote as it was delivered at MCP Dev Summit Toronto on
 6 October 2026, from Angie Jones' introduction through the applause. Each slide comes up

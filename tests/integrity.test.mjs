@@ -97,6 +97,15 @@ test("every deck recording is named in the README, and the foundation's audio is
   assert.match(credits, /46:46 to 1:01:57/, "README's Credits do not give the talk's timestamps");
 });
 
+test("the next release's body credits the foundation with its video and timestamps", () => {
+  const body = readFileSync(new URL("../releases/next.md", import.meta.url), "utf8");
+  const credits = body.split("## Credits")[1] ?? "";
+  assert.match(credits, /Agentic AI Foundation/, "releases/next.md Credits do not name the Agentic AI Foundation");
+  assert.match(credits, /https:\/\/www\.youtube\.com\/watch\?v=a8p-Pz1k5l0&t=2806s/, "releases/next.md Credits do not link the talk at 46:46 of a8p-Pz1k5l0");
+  assert.match(credits, /46:46 to 1:01:57/, "releases/next.md Credits do not give the talk's timestamps");
+  assert.doesNotMatch(body, /draft, not released/, "releases/next.md still calls itself a draft");
+});
+
 test("every image the deck draws is on disk", () => {
   for (const s of read("src/deck/deck.json").slides) {
     for (const e of s.elements) if (e.kind === "image") assert.ok(exists(e.src), `slide ${s.number}: missing ${e.src}`);
